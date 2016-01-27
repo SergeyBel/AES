@@ -4,11 +4,6 @@
 
 using namespace std;
 
-
-
-
-
-
 void Test128()
 {
 	AES cipher(128);
@@ -18,7 +13,7 @@ void Test128()
 	unsigned char right[] = { 0x69, 0xc4, 0xe0, 0xd8, 0x6a, 0x7b, 0x04, 0x30, 0xd8, 0xcd, 0xb7, 0x80, 0x70, 0xb4, 0xc5, 0x5a };
 
 	cipher.AES_Enc(plain, out, key);
-	
+
 	assert(!memcmp(right, out, 16 * sizeof(unsigned char)));
 	cout << "Test 128 [OK]" << endl;
 	delete[] out;
@@ -62,10 +57,6 @@ int main()
 	Test128();
 	Test192();
 	Test256();
-	
-	
-	int c;
-	cin >> c;
     return 0;
 }
 
