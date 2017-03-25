@@ -1,6 +1,10 @@
 #ifndef _AES_H_
 #define _AES_H_
 
+#include<cstring>
+
+using namespace std;
+
 class AES
 {
 private:
@@ -8,42 +12,52 @@ private:
 	int Nk;
 	int Nr;
 
+	unsigned int blockBytesLen;
+
 	void SubBytes(unsigned char **state);
 
-    void ShiftRow(unsigned char **state, int i, int n);    // shift row i on n positions
+  void ShiftRow(unsigned char **state, int i, int n);    // shift row i on n positions
 
-    void ShiftRows(unsigned char **state);
+  void ShiftRows(unsigned char **state);
 
-    unsigned char xtime(unsigned char b);    // multiply on x
+  unsigned char xtime(unsigned char b);    // multiply on x
 
-    unsigned char mul_bytes(unsigned char a, unsigned char b);
+  unsigned char mul_bytes(unsigned char a, unsigned char b);
 
-    void MixColumns(unsigned char **state);
+  void MixColumns(unsigned char **state);
 
-    void AddRoundKey(unsigned char **state, unsigned char *key);
+  void AddRoundKey(unsigned char **state, unsigned char *key);
 
-    void SubWord(unsigned char *a);
+  void SubWord(unsigned char *a);
 
-    void RotWord(unsigned char *a);
+  void RotWord(unsigned char *a);
 
-    void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
+  void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
 
-    void Rcon(unsigned char * a, int n);
+  void Rcon(unsigned char * a, int n);
 
-    void InvSubBytes(unsigned char **state);
+  void InvSubBytes(unsigned char **state);
 
-    void InvMixColumns(unsigned char **state);
+  void InvMixColumns(unsigned char **state);
 
-    void InvShiftRows(unsigned char **state);
+  void InvShiftRows(unsigned char **state);
+
+  unsigned int PaddingNulls(unsigned char in[], unsigned int inLen);
 
 	void KeyExpansion(unsigned char key[], unsigned char w[]);
+
+  void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+
+  void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
 
 public:
 	AES(int keyLen);
 
-	void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
-    void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	void DecryptECB(unsigned char in[], unsigned char out[], unsigned  char key[]);
+
+
 };
 
 const unsigned char sbox[16][16] = {

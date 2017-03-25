@@ -20,7 +20,126 @@ AES::AES(int keyLen = 256)
 	default:
 		throw "Incorrect key length";
 	}
+
+	blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
 }
+
+unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
+{
+  outLen = PaddingNulls(in, inLen);
+  unsigned char *out = new unsigned char [outLen];
+  for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+  {
+    EncryptBlock(in + i, out + i, key);
+  }
+
+  return out;
+}
+
+unsigned int AES::PaddingNulls(unsigned char in[], unsigned int inLen)
+{
+  unsigned int alignLen = (inLen / blockBytesLen) * blockBytesLen;
+  unsigned char * alignIn = new unsigned char [alignLen];
+  memcpy(alignIn, in, alignLen);
+  return alignLen;
+}
+
+void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
+{
+	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
+	KeyExpansion(key, w);
+	unsigned char **state = new unsigned char *[4];
+	state[0] = new unsigned  char[4 * Nb];
+	int i, j, round;
+	for (i = 0; i < 4; i++)
+	{
+		state[i] = state[0] + Nb * i;
+	}
+
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < Nb; j++)
+		{
+			state[i][j] = in[i + 4 * j];
+		}
+	}
+
+	AddRoundKey(state, w);
+
+	for (round = 1; round <= Nr - 1; round++)
+	{
+		SubBytes(state);
+		ShiftRows(state);
+		MixColumns(state);
+		AddRoundKey(state, w + round * 4 * Nb);
+	}
+
+	SubBytes(state);
+	ShiftRows(state);
+	AddRoundKey(state, w + Nr * 4 * Nb);
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < Nb; j++)
+		{
+			out[i + 4 * j] = state[i][j];
+		}
+	}
+
+	delete[] state[0];
+	delete[] state;
+	delete[] w;
+}
+
+void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
+{
+	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
+	KeyExpansion(key, w);
+	unsigned char **state = new unsigned char *[4];
+	state[0] = new unsigned  char[4 * Nb];
+	int i, j, round;
+	for (i = 0; i < 4; i++)
+	{
+		state[i] = state[0] + Nb * i;
+	}
+
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < Nb; j++) {
+			state[i][j] = in[i + 4 * j];
+		}
+	}
+
+	AddRoundKey(state, w + Nr * 4 * Nb);
+
+	for (round = Nr - 1; round >= 1; round--)
+	{
+		InvSubBytes(state);
+		InvShiftRows(state);
+		AddRoundKey(state, w + round * 4 * Nb);
+		InvMixColumns(state);
+	}
+
+	InvSubBytes(state);
+	InvShiftRows(state);
+	AddRoundKey(state, w);
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < Nb; j++) {
+			out[i + 4 * j] = state[i][j];
+		}
+	}
+
+	delete[] state[0];
+	delete[] state;
+	delete[] w;
+}
+
+
+
 
 void AES::SubBytes(unsigned char **state)
 {
@@ -212,53 +331,7 @@ void AES::KeyExpansion(unsigned char key[], unsigned char w[])
 
 }
 
-void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
-{
-	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-	KeyExpansion(key, w);
-	unsigned char **state = new unsigned char *[4];
-	state[0] = new unsigned  char[4 * Nb];
-	int i, j, round;
-	for (i = 0; i < 4; i++)
-	{
-		state[i] = state[0] + Nb * i;
-	}
 
-
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < Nb; j++)
-		{
-			state[i][j] = in[i + 4 * j];
-		}
-	}
-
-	AddRoundKey(state, w);
-
-	for (round = 1; round <= Nr - 1; round++)
-	{
-		SubBytes(state);
-		ShiftRows(state);
-		MixColumns(state);
-		AddRoundKey(state, w + round * 4 * Nb);
-	}
-
-	SubBytes(state);
-	ShiftRows(state);
-	AddRoundKey(state, w + Nr * 4 * Nb);
-
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < Nb; j++)
-		{
-			out[i + 4 * j] = state[i][j];
-		}
-	}
-
-	delete[] state[0];
-	delete[] state;
-	delete[] w;
-}
 
 void AES::InvSubBytes(unsigned char **state)
 {
@@ -294,9 +367,7 @@ void AES::InvMixColumns(unsigned char **state)
 		{
 			state[i][j] = s1[i];
 		}
-
 	}
-
 }
 
 void AES::InvShiftRows(unsigned char **state)
@@ -306,48 +377,7 @@ void AES::InvShiftRows(unsigned char **state)
 	ShiftRow(state, 3, Nb - 3);
 }
 
-void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
-{
-	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-	KeyExpansion(key, w);
-	unsigned char **state = new unsigned char *[4];
-	state[0] = new unsigned  char[4 * Nb];
-	int i, j, round;
-	for (i = 0; i < 4; i++)
-	{
-		state[i] = state[0] + Nb * i;
-	}
 
 
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < Nb; j++) {
-			state[i][j] = in[i + 4 * j];
-		}
-	}
 
-	AddRoundKey(state, w + Nr * 4 * Nb);
 
-	for (round = Nr - 1; round >= 1; round--)
-	{
-		InvSubBytes(state);
-		InvShiftRows(state);
-		AddRoundKey(state, w + round * 4 * Nb);
-		InvMixColumns(state);
-	}
-
-	InvSubBytes(state);
-	InvShiftRows(state);
-	AddRoundKey(state, w);
-
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < Nb; j++) {
-			out[i + 4 * j] = state[i][j];
-		}
-	}
-
-	delete[] state[0];
-	delete[] state;
-	delete[] w;
-}
