@@ -55,7 +55,7 @@ public:
 
 	unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
-	void DecryptECB(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
 
 };

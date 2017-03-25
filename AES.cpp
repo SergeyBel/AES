@@ -36,6 +36,18 @@ unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned
   return out;
 }
 
+unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
+{
+  outLen = PaddingNulls(in, inLen);
+  unsigned char *out = new unsigned char [outLen];
+  for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+  {
+    DecryptBlock(in + i, out + i, key);
+  }
+
+  return out;
+}
+
 unsigned int AES::PaddingNulls(unsigned char in[], unsigned int inLen)
 {
   unsigned int alignLen = (inLen / blockBytesLen) * blockBytesLen;
