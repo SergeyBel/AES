@@ -50,12 +50,18 @@ private:
 
   void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
 
+  void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+
 public:
 	AES(int keyLen);
 
 	unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
 	unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
+
+  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+
+  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
 
 
 };
