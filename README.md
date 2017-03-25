@@ -12,8 +12,8 @@ unsigned int plainLen = 16 * sizeof(unsigned char);  //bytes in plaintext
 unsigned int outLen = 0;  // out param - bytes in сiphertext
 
 AES aes(128);  //128 - key length, can be 128, 192 or 256
-out = aes.EncryptECB(plain, plainLen, key, outLen);
-//now out contains outLen bytes - ciphertext
+c = aes.EncryptECB(plain, plainLen, key, outLen);
+//now variable c contains outLen bytes - ciphertext
 ...
 ```
 ECB, CBC, CFB modes are supported.
