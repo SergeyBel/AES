@@ -212,7 +212,7 @@ void AES::KeyExpansion(unsigned char key[], unsigned char w[])
 
 }
 
-void AES::AES_Enc(unsigned char in[], unsigned char out[], unsigned  char key[])
+void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
 {
 	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
 	KeyExpansion(key, w);
@@ -306,7 +306,7 @@ void AES::InvShiftRows(unsigned char **state)
 	ShiftRow(state, 3, Nb - 3);
 }
 
-void AES::AES_Dec(unsigned char in[], unsigned char out[], unsigned  char key[])
+void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
 {
 	unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
 	KeyExpansion(key, w);

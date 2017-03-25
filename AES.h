@@ -41,9 +41,9 @@ private:
 public:
 	AES(int keyLen);
 
-	void AES_Enc(unsigned char in[], unsigned char out[], unsigned  char key[]);
+	void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
 
-    void AES_Dec(unsigned char in[], unsigned char out[], unsigned  char key[]);
+    void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
 };
 
 const unsigned char sbox[16][16] = {
