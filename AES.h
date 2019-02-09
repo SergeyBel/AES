@@ -42,7 +42,9 @@ private:
 
   void InvShiftRows(unsigned char **state);
 
-  unsigned int PaddingNulls(unsigned char in[], unsigned int inLen);
+  unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
+  
+  unsigned int GetPaddingLength(unsigned int len);
 
 	void KeyExpansion(unsigned char key[], unsigned char w[]);
 

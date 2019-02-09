@@ -26,101 +26,123 @@ AES::AES(int keyLen = 256)
 
 unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    EncryptBlock(in + i, out + i, key);
+    EncryptBlock(alignIn + i, out + i, key);
   }
-
+  
+  delete[] alignIn;
+  
   return out;
 }
 
 unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    DecryptBlock(in + i, out + i, key);
+    DecryptBlock(alignIn + i, out + i, key);
   }
-
+  
+  delete[] alignIn;
+  
   return out;
 }
 
 
 unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    XorBlocks(block, in + i, block, blockBytesLen);
+    XorBlocks(block, alignIn + i, block, blockBytesLen);
     EncryptBlock(block, out + i, key);
   }
+  
   delete[] block;
+  delete[] alignIn;
 
   return out;
 }
 
 unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    DecryptBlock(in + i, out + i, key);
+    DecryptBlock(alignIn + i, out + i, key);
     XorBlocks(block, out + i, out + i, blockBytesLen);
   }
+  
   delete[] block;
+  delete[] alignIn;
 
   return out;
 }
 
 unsigned char *AES::EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
     EncryptBlock(block, out + i, key);
-    XorBlocks(in + i, block, out + i, blockBytesLen);
+    XorBlocks(alignIn + i, block, out + i, blockBytesLen);
     memcpy(block, out + i, blockBytesLen);
   }
+  
   delete[] block;
+  delete[] alignIn;
 
   return out;
 }
 
 unsigned char *AES::DecryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen)
 {
-  outLen = PaddingNulls(in, inLen);
-  unsigned char *out = new unsigned char [outLen];
+  outLen = GetPaddingLength(inLen);
+  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
+  unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
     DecryptBlock(block, out + i, key);
-    XorBlocks(in + i, block, out + i, blockBytesLen);
-    memcpy(block, in + i, blockBytesLen);
+    XorBlocks(alignIn + i, block, out + i, blockBytesLen);
+    memcpy(block, alignIn + i, blockBytesLen);
   }
+  
   delete[] block;
+  delete[] alignIn;
 
   return out;
 }
 
-unsigned int AES::PaddingNulls(unsigned char in[], unsigned int inLen)
+unsigned char * AES::PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen)
 {
-  unsigned int alignLen = (inLen / blockBytesLen) * blockBytesLen;
-  unsigned char * alignIn = new unsigned char [alignLen];
-  memcpy(alignIn, in, alignLen);
-  return alignLen;
+  unsigned char * alignIn = new unsigned char[alignLen];
+  memcpy(alignIn, in, inLen);
+  return alignIn;
+}
+
+unsigned int AES::GetPaddingLength(unsigned int len)
+{
+	return (len / blockBytesLen) * blockBytesLen;
 }
 
 void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
