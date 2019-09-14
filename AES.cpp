@@ -1,6 +1,6 @@
 #include "AES.h"
 
-AES::AES(int keyLen = 256)
+AES::AES(int keyLen)
 {
   this->Nb = 4;
   switch (keyLen)
