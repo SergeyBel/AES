@@ -55,7 +55,7 @@ private:
   void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
 public:
-  AES(int keyLen);
+  AES(int keyLen = 256);
 
   unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
