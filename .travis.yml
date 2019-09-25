@@ -1,4 +1,3 @@
-travis configuration for coverage testing
 language: c
 
 before_script: 
