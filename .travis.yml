@@ -1,0 +1,17 @@
+travis configuration for coverage testing
+language: c
+
+before_script: 
+- cd ${TRAVIS_BUILD_DIR}
+
+# Compiler selection
+compiler:
+  - clang
+  - gcc
+
+
+# Build steps
+script: 
+  - cd ${TRAVIS_BUILD_DIR}
+  - cmake .
+  - make
