@@ -2,7 +2,7 @@
 C++ AES(Advanced Encryption Standard) implementation
 
 Build status  
-[Build Status](https://travis-ci.org/SergeyBel/AES.svg?branch=master)
+![Build Status](https://travis-ci.org/SergeyBel/AES.svg?branch=master)
 
 
 **This class is very simple to use:**
