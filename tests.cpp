@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include <iostream>
-#include "../AES.h"
+#include "AES.h"
 
 TEST(TestKeyLengths, KeyLength128) {
   AES aes(128);
