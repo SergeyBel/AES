@@ -1,13 +1,5 @@
 language: cpp
 
-before_script: 
-- cd ${TRAVIS_BUILD_DIR}
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-
 # Compiler selection
 compiler:
   - clang
@@ -16,6 +8,12 @@ compiler:
 
 # Build steps
 script: 
+  - apt-get install libgtest-dev
+  - cd /usr/src/gtest
+  - cmake CMakeLists.txt
+  - make
+  - cp *.a /usr/lib
   - cd ${TRAVIS_BUILD_DIR}
   - cmake .
   - make
+  - ./tests
