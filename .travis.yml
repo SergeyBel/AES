@@ -1,0 +1,19 @@
+language: cpp
+
+# Compiler selection
+compiler:
+  - gcc
+
+
+# Build steps
+script: 
+  - sudo apt-get install cmake
+  - sudo apt-get install libgtest-dev
+  - cd /usr/src/gtest
+  - sudo cmake CMakeLists.txt
+  - sudo make
+  - sudo cp *.a /usr/lib
+  - cd ${TRAVIS_BUILD_DIR}
+  - cmake .
+  - make
+  - ./tests
