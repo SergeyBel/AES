@@ -1,6 +1,9 @@
 # AES
 C++ AES(Advanced Encryption Standard) implementation
 
+Build status
+https://travis-ci.org/SergeyBel/AES.svg?branch=master
+
 **This class is very simple to use:**
 ```c++
 ...
@@ -18,8 +21,6 @@ c = aes.EncryptECB(plain, plainLen, key, outLen);
 ```
 ECB, CBC, CFB modes are supported.
 
-
-For more tests and examples see [Main file](https://github.com/SergeyBel/AES/blob/master/main.cpp)
 
 You can read more about AES here:
 
