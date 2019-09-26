@@ -1,7 +1,6 @@
 # AES
-C++ AES(Advanced Encryption Standard) implementation
-
-Build status  
+C++ AES(Advanced Encryption Standard) implementation  
+ 
 ![Build Status](https://travis-ci.org/SergeyBel/AES.svg?branch=master)
 
 
