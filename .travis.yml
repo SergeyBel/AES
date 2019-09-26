@@ -1,7 +1,12 @@
-language: c
+language: cpp
 
 before_script: 
 - cd ${TRAVIS_BUILD_DIR}
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
 
 # Compiler selection
 compiler:
