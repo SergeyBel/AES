@@ -8,11 +8,11 @@ compiler:
 
 # Build steps
 script: 
-  - apt-get install libgtest-dev
+  - sudo apt-get install libgtest-dev
   - cd /usr/src/gtest
-  - cmake CMakeLists.txt
-  - make
-  - cp *.a /usr/lib
+  - sudo cmake CMakeLists.txt
+  - sudo make
+  - sudo cp *.a /usr/lib
   - cd ${TRAVIS_BUILD_DIR}
   - cmake .
   - make
