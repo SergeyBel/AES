@@ -2,6 +2,8 @@
 #define _AES_H_
 
 #include<cstring>
+#include <iostream>
+#include <stdio.h>
 
 using namespace std;
 
@@ -65,9 +67,11 @@ public:
 
   unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
 
-    unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
 
   unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  
+  void printHexArray (unsigned char a[], unsigned int n);
 
 
 };

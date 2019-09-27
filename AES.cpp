@@ -139,14 +139,22 @@ unsigned char *AES::DecryptCFB(unsigned char in[], unsigned int inLen, unsigned 
 
 unsigned char * AES::PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen)
 {
-  unsigned char * alignIn = new unsigned char[alignLen];
+  unsigned char *alignIn = new unsigned char[alignLen];
   memcpy(alignIn, in, inLen);
+  memset(alignIn + inLen, 0x00, alignLen - inLen);
   return alignIn;
 }
 
 unsigned int AES::GetPaddingLength(unsigned int len)
 {
-  return (len / blockBytesLen) * blockBytesLen;
+  unsigned int lengthWithPadding =  (len / blockBytesLen);
+  if (len % blockBytesLen) {
+	  lengthWithPadding++;
+  }
+  
+  lengthWithPadding *=  blockBytesLen;
+  
+  return lengthWithPadding;
 }
 
 void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
@@ -486,6 +494,14 @@ void AES::XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsig
     c[i] = a[i] ^ b[i];
   }
 }
+
+void AES::printHexArray (unsigned char a[], unsigned int n)
+{
+	for (int i = 0; i < n; i++) {
+	  printf("%02x ", a[i]);
+	}
+		
+  }
 
 
 
