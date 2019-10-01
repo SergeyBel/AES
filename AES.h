@@ -61,7 +61,7 @@ public:
 
   unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
 
-  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
+  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[]);
 
   unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
 

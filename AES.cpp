@@ -39,17 +39,13 @@ unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned
   return out;
 }
 
-unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
+unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[])
 {
-  outLen = GetPaddingLength(inLen);
-  unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
-  unsigned char *out = new unsigned char[outLen];
-  for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+  unsigned char *out = new unsigned char[inLen];
+  for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
   {
-    DecryptBlock(alignIn + i, out + i, key);
+    DecryptBlock(in + i, out + i, key);
   }
-  
-  delete[] alignIn;
   
   return out;
 }
@@ -501,7 +497,7 @@ void AES::printHexArray (unsigned char a[], unsigned int n)
 	  printf("%02x ", a[i]);
 	}
 		
-  }
+}
 
 
 
