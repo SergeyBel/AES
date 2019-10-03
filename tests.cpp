@@ -163,7 +163,7 @@ TEST(CBC, EncryptDecrypt)
   unsigned int len;
   
   unsigned char *out = aes.EncryptCBC(plain, BLOCK_BYTES_LENGTH, key, iv, len);
-  unsigned char *innew = aes.DecryptCBC(out, BLOCK_BYTES_LENGTH, key, iv, len);
+  unsigned char *innew = aes.DecryptCBC(out, BLOCK_BYTES_LENGTH, key, iv);
   ASSERT_FALSE(memcmp(innew, plain, BLOCK_BYTES_LENGTH));
   delete[] out;
   delete[] innew;
@@ -197,9 +197,8 @@ TEST(CBC, TwoBlocksDecrypt)
   unsigned char right[] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
 							0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
  
-  unsigned int len;
   
-  unsigned char *out = aes.DecryptCBC(encrypted, BLOCK_BYTES_LENGTH * 2, key, iv, len);
+  unsigned char *out = aes.DecryptCBC(encrypted, BLOCK_BYTES_LENGTH * 2, key, iv);
 
   ASSERT_FALSE(memcmp(out, right, BLOCK_BYTES_LENGTH * 2));
   delete[] out;
@@ -217,7 +216,7 @@ TEST(CFB, EncryptDecrypt)
   unsigned int len;
   
   unsigned char *out = aes.EncryptCFB(plain, BLOCK_BYTES_LENGTH, key, iv, len);
-  unsigned char *innew = aes.DecryptCFB(out, BLOCK_BYTES_LENGTH, key, iv, len);
+  unsigned char *innew = aes.DecryptCFB(out, BLOCK_BYTES_LENGTH, key, iv);
   ASSERT_FALSE(memcmp(innew, plain, BLOCK_BYTES_LENGTH));
   delete[] out;
   delete[] innew;
@@ -250,10 +249,8 @@ TEST(CFB, DecryptTwoBlocks)
   unsigned char key[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
   unsigned char right[] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
 							0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
-
-  unsigned int len;
   
-  unsigned char *out = aes.DecryptCFB(encrypted, BLOCK_BYTES_LENGTH * 2, key, iv, len);
+  unsigned char *out = aes.DecryptCFB(encrypted, BLOCK_BYTES_LENGTH * 2, key, iv);
   ASSERT_FALSE(memcmp(right, out, BLOCK_BYTES_LENGTH * 2));
   delete[] out;
 }
