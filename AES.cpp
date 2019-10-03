@@ -62,6 +62,7 @@ unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen, unsigned 
   {
     XorBlocks(block, alignIn + i, block, blockBytesLen);
     EncryptBlock(block, out + i, key);
+    memcpy(block, out + i, blockBytesLen);
   }
   
   delete[] block;
@@ -81,6 +82,7 @@ unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned 
   {
     DecryptBlock(alignIn + i, out + i, key);
     XorBlocks(block, out + i, out + i, blockBytesLen);
+    memcpy(block, alignIn + i, blockBytesLen);
   }
   
   delete[] block;
