@@ -1,0 +1,10 @@
+version: '3'
+services:
+    aes:
+        build: "./docker"
+        container_name: aes
+        volumes:
+            - ./:/app:rw
+        stdin_open: true
+        tty: true
+        working_dir: /app
