@@ -14,5 +14,5 @@ script:
   - sudo make
   - sudo cp *.a /usr/lib
   - cd ${TRAVIS_BUILD_DIR}
-  - make test
+  - make build_test
   - ./bin/test
