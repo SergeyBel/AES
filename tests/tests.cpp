@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include <iostream>
-#include "AES.h"
+#include "../src/AES.h"
 
 const unsigned int BLOCK_BYTES_LENGTH = 16 * sizeof(unsigned char);
 
