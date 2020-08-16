@@ -62,11 +62,13 @@ unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen, unsigned 
   unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
   unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
     XorBlocks(block, alignIn + i, block, blockBytesLen);
-    EncryptBlock(block, out + i, key);
+    EncryptBlock(block, out + i, roundKeys);
     memcpy(block, out + i, blockBytesLen);
   }
   
@@ -80,10 +82,12 @@ unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned 
 {
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
   {
-    DecryptBlock(in + i, out + i, key);
+    DecryptBlock(in + i, out + i, roundKeys);
     XorBlocks(block, out + i, out + i, blockBytesLen);
     memcpy(block, in + i, blockBytesLen);
   }
@@ -100,10 +104,12 @@ unsigned char *AES::EncryptCFB(unsigned char in[], unsigned int inLen, unsigned 
   unsigned char *out = new unsigned char[outLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   unsigned char *encryptedBlock = new unsigned char[blockBytesLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    EncryptBlock(block, encryptedBlock, key);
+    EncryptBlock(block, encryptedBlock, roundKeys);
     XorBlocks(alignIn + i, encryptedBlock, out + i, blockBytesLen);
     memcpy(block, out + i, blockBytesLen);
   }
@@ -120,10 +126,12 @@ unsigned char *AES::DecryptCFB(unsigned char in[], unsigned int inLen, unsigned 
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
   unsigned char *encryptedBlock = new unsigned char[blockBytesLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
   for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
   {
-    EncryptBlock(block, encryptedBlock, key);
+    EncryptBlock(block, encryptedBlock, roundKeys);
     XorBlocks(in + i, encryptedBlock, out + i, blockBytesLen);
     memcpy(block, in + i, blockBytesLen);
   }
