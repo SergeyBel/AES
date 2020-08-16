@@ -29,12 +29,15 @@ unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned
   outLen = GetPaddingLength(inLen);
   unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
   unsigned char *out = new unsigned char[outLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
   {
-    EncryptBlock(alignIn + i, out + i, key);
+    EncryptBlock(alignIn + i, out + i, roundKeys);
   }
   
   delete[] alignIn;
+  delete[] roundKeys;
   
   return out;
 }
@@ -42,9 +45,11 @@ unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned
 unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[])
 {
   unsigned char *out = new unsigned char[inLen];
+  unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+  KeyExpansion(key, roundKeys);
   for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
   {
-    DecryptBlock(in + i, out + i, key);
+    DecryptBlock(in + i, out + i, roundKeys);
   }
   
   return out;
@@ -149,10 +154,8 @@ unsigned int AES::GetPaddingLength(unsigned int len)
   return lengthWithPadding;
 }
 
-void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
+void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char *roundKeys)
 {
-  unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-  KeyExpansion(key, w);
   unsigned char **state = new unsigned char *[4];
   state[0] = new unsigned  char[4 * Nb];
   int i, j, round;
@@ -170,19 +173,19 @@ void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char k
     }
   }
 
-  AddRoundKey(state, w);
+  AddRoundKey(state, roundKeys);
 
   for (round = 1; round <= Nr - 1; round++)
   {
     SubBytes(state);
     ShiftRows(state);
     MixColumns(state);
-    AddRoundKey(state, w + round * 4 * Nb);
+    AddRoundKey(state, roundKeys + round * 4 * Nb);
   }
 
   SubBytes(state);
   ShiftRows(state);
-  AddRoundKey(state, w + Nr * 4 * Nb);
+  AddRoundKey(state, roundKeys + Nr * 4 * Nb);
 
   for (i = 0; i < 4; i++)
   {
@@ -194,13 +197,10 @@ void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char k
 
   delete[] state[0];
   delete[] state;
-  delete[] w;
 }
 
-void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[])
+void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char *roundKeys)
 {
-  unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-  KeyExpansion(key, w);
   unsigned char **state = new unsigned char *[4];
   state[0] = new unsigned  char[4 * Nb];
   int i, j, round;
@@ -217,19 +217,19 @@ void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char k
     }
   }
 
-  AddRoundKey(state, w + Nr * 4 * Nb);
+  AddRoundKey(state, roundKeys + Nr * 4 * Nb);
 
   for (round = Nr - 1; round >= 1; round--)
   {
     InvSubBytes(state);
     InvShiftRows(state);
-    AddRoundKey(state, w + round * 4 * Nb);
+    AddRoundKey(state, roundKeys + round * 4 * Nb);
     InvMixColumns(state);
   }
 
   InvSubBytes(state);
   InvShiftRows(state);
-  AddRoundKey(state, w);
+  AddRoundKey(state, roundKeys);
 
   for (i = 0; i < 4; i++)
   {
@@ -240,7 +240,6 @@ void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char k
 
   delete[] state[0];
   delete[] state;
-  delete[] w;
 }
 
 
@@ -283,59 +282,54 @@ void AES::ShiftRows(unsigned char **state)
 
 unsigned char AES::xtime(unsigned char b)    // multiply on x
 {
-  unsigned char mask = 0x80, m = 0x1b;
-  unsigned char high_bit = b & mask;
-  b = b << 1;
-  if (high_bit) {    // mod m(x)
-    b = b ^ m;
-  }
-  return b;
+  return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
 }
 
-unsigned char AES::mul_bytes(unsigned char a, unsigned char b)
+
+
+/* Implementation taken from https://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example */
+void AES::MixSingleColumn(unsigned char *r) 
 {
-  unsigned char c = 0, mask = 1, bit, d;
-  int i, j;
-  for (i = 0; i < 8; i++)
+  unsigned char a[4];
+  unsigned char b[4];
+  unsigned char c;
+  unsigned char h;
+  /* The array 'a' is simply a copy of the input array 'r'
+  * The array 'b' is each element of the array 'a' multiplied by 2
+  * in Rijndael's Galois field
+  * a[n] ^ b[n] is element n multiplied by 3 in Rijndael's Galois field */ 
+  for(c=0;c<4;c++) 
   {
-    bit = b & mask;
-    if (bit)
-    {
-      d = a;
-      for (j = 0; j < i; j++)
-      {    // multiply on x^i
-        d = xtime(d);
-      }
-      c = c ^ d;    // xor to result
-    }
-    b = b >> 1;
+    a[c] = r[c];
+    /* h is 0xff if the high bit of r[c] is set, 0 otherwise */
+    h = (unsigned char)((signed char)r[c] >> 7); /* arithmetic right shift, thus shifting in either zeros or ones */
+    b[c] = r[c] << 1; /* implicitly removes high bit because b[c] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line */
+    b[c] ^= 0x1B & h; /* Rijndael's Galois field */
   }
-  return c;
+  r[0] = b[0] ^ a[3] ^ a[2] ^ b[1] ^ a[1]; /* 2 * a0 + a3 + a2 + 3 * a1 */
+  r[1] = b[1] ^ a[0] ^ a[3] ^ b[2] ^ a[2]; /* 2 * a1 + a0 + a3 + 3 * a2 */
+  r[2] = b[2] ^ a[1] ^ a[0] ^ b[3] ^ a[3]; /* 2 * a2 + a1 + a0 + 3 * a3 */
+  r[3] = b[3] ^ a[2] ^ a[1] ^ b[0] ^ a[0]; /* 2 * a3 + a2 + a1 + 3 * a0 */
 }
 
-void AES::MixColumns(unsigned char **state)
+/* Performs the mix columns step. Theory from: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#The_MixColumns_step */
+void AES::MixColumns(unsigned char** state) 
 {
-  unsigned char s[4], s1[4];
-  int i, j;
+  unsigned char *temp = new unsigned char[4];
 
-  for (j = 0; j < Nb; j++)
+  for(int i = 0; i < 4; ++i)
   {
-    for (i = 0; i < 4; i++)
+    for(int j = 0; j < 4; ++j)
     {
-      s[i] = state[i][j];
+      temp[j] = state[j][i]; //place the current state column in temp
     }
-
-    s1[0] = mul_bytes(0x02, s[0]) ^ mul_bytes(0x03, s[1]) ^ s[2] ^ s[3];
-    s1[1] = s[0] ^ mul_bytes(0x02, s[1]) ^ mul_bytes(0x03, s[2]) ^ s[3];
-    s1[2] = s[0] ^ s[1] ^ mul_bytes(0x02, s[2]) ^ mul_bytes(0x03, s[3]);
-    s1[3] = mul_bytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mul_bytes(0x02, s[3]);
-    for (i = 0; i < 4; i++)
+    MixSingleColumn(temp); //mix it using the wiki implementation
+    for(int j = 0; j < 4; ++j)
     {
-      state[i][j] = s1[i];
+      state[j][i] = temp[j]; //when the column is mixed, place it back into the state
     }
-
   }
-
+  delete temp;
 }
 
 void AES::AddRoundKey(unsigned char **state, unsigned char *key)
@@ -415,7 +409,7 @@ void AES::KeyExpansion(unsigned char key[], unsigned char w[])
         RotWord(temp);
         SubWord(temp);
         Rcon(rcon, i / (Nk * 4));
-      XorWords(temp, rcon, temp);
+        XorWords(temp, rcon, temp);
     }
     else if (Nk > 6 && i / 4 % Nk == 4)
     {
@@ -448,6 +442,32 @@ void AES::InvSubBytes(unsigned char **state)
     }
   }
 }
+
+
+unsigned char AES::mul_bytes(unsigned char a, unsigned char b) // multiplication a and b in galois field
+{
+    unsigned char p = 0;
+    unsigned char high_bit_mask = 0x80;
+    unsigned char high_bit = 0;
+    unsigned char modulo = 0x1B; /* x^8 + x^4 + x^3 + x + 1 */
+
+
+    for (int i = 0; i < 8; i++) {
+      if (b & 1) {
+           p ^= a;
+      }
+
+      high_bit = a & high_bit_mask;
+      a <<= 1;
+      if (high_bit) {
+          a ^= modulo;
+      }
+      b >>= 1;
+    }
+
+    return p;
+}
+
 
 void AES::InvMixColumns(unsigned char **state)
 {
