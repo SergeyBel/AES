@@ -28,6 +28,8 @@ private:
 
   void MixColumns(unsigned char **state);
 
+  void MixSingleColumn(unsigned char *r);
+
   void AddRoundKey(unsigned char **state, unsigned char *key);
 
   void SubWord(unsigned char *a);
