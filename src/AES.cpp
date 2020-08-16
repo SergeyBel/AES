@@ -51,6 +51,8 @@ unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned
   {
     DecryptBlock(in + i, out + i, roundKeys);
   }
+
+  delete[] roundKeys;
   
   return out;
 }
@@ -74,6 +76,7 @@ unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen, unsigned 
   
   delete[] block;
   delete[] alignIn;
+  delete[] roundKeys;
 
   return out;
 }
@@ -93,6 +96,7 @@ unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned 
   }
   
   delete[] block;
+  delete[] roundKeys;
 
   return out;
 }
@@ -117,6 +121,7 @@ unsigned char *AES::EncryptCFB(unsigned char in[], unsigned int inLen, unsigned 
   delete[] block;
   delete[] encryptedBlock;
   delete[] alignIn;
+  delete[] roundKeys;
 
   return out;
 }
@@ -138,6 +143,7 @@ unsigned char *AES::DecryptCFB(unsigned char in[], unsigned int inLen, unsigned 
   
   delete[] block;
   delete[] encryptedBlock;
+  delete[] roundKeys;
 
   return out;
 }
@@ -269,16 +275,12 @@ void AES::SubBytes(unsigned char **state)
 void AES::ShiftRow(unsigned char **state, int i, int n)    // shift row i on n positions
 {
   unsigned char t;
-  int k, j;
-  for (k = 0; k < n; k++)
-  {
-    t = state[i][0];
-    for (j = 0; j < Nb - 1; j++)
-    {
-      state[i][j] = state[i][j + 1];
-    }
-    state[i][Nb - 1] = t;
+  int k, j, index;
+  unsigned char tmp[Nb];
+  for (j = 0; j < Nb; j++) {
+    tmp[j] = state[i][(j + n) % Nb];
   }
+  memcpy(state[i], tmp, Nb * sizeof(unsigned char));
 }
 
 void AES::ShiftRows(unsigned char **state)
