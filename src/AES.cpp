@@ -276,11 +276,13 @@ void AES::ShiftRow(unsigned char **state, int i, int n)    // shift row i on n p
 {
   unsigned char t;
   int k, j, index;
-  unsigned char tmp[Nb];
+  unsigned char *tmp = new unsigned char[Nb];
   for (j = 0; j < Nb; j++) {
     tmp[j] = state[i][(j + n) % Nb];
   }
   memcpy(state[i], tmp, Nb * sizeof(unsigned char));
+	
+  delete[] tmp;
 }
 
 void AES::ShiftRows(unsigned char **state)
