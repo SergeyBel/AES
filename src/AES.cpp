@@ -274,10 +274,8 @@ void AES::SubBytes(unsigned char **state)
 
 void AES::ShiftRow(unsigned char **state, int i, int n)    // shift row i on n positions
 {
-  unsigned char t;
-  int k, j, index;
   unsigned char *tmp = new unsigned char[Nb];
-  for (j = 0; j < Nb; j++) {
+  for (int j = 0; j < Nb; j++) {
     tmp[j] = state[i][(j + n) % Nb];
   }
   memcpy(state[i], tmp, Nb * sizeof(unsigned char));
@@ -521,7 +519,7 @@ void AES::XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsig
 
 void AES::printHexArray (unsigned char a[], unsigned int n)
 {
-	for (int i = 0; i < n; i++) {
+	for (unsigned int i = 0; i < n; i++) {
 	  printf("%02x ", a[i]);
 	}
 }

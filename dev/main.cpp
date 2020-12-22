@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../src/AES.h"
 
-int main(int argc, char *argv[])
+int main()
 {
   cout << "Aes dev" << endl;
   return 0;
