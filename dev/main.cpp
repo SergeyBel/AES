@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../src/AES.h"
+using namespace std;
 
 int main()
 {
