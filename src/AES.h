@@ -1,84 +1,111 @@
 #ifndef _AES_H_
 #define _AES_H_
 
-#include<cstring>
+#include <algorithm>
+#include <array>
+#include <cassert>
 #include <iostream>
-#include <stdio.h>
+#include <vector>
 
-using namespace std;
+#if __cplusplus >= 201402L
+#define AES_CONSTEXPR_14 constexpr
+#else
+#define AES_CONSTEXPR_14
+#endif
 
-class AES
+template<int keylen = 256>
+class Aes
 {
 private:
-  int Nb;
+  static constexpr int Nb = 4;
   int Nk;
   int Nr;
 
-  unsigned int blockBytesLen;
+  static constexpr unsigned int blockBytesLen = 4 * Nb;
 
-  void SubBytes(unsigned char **state);
+  void SubBytes(std::array<std::array<unsigned char, Nb>, 4>& state);
 
-  void ShiftRow(unsigned char **state, int i, int n);    // shift row i on n positions
+  void ShiftRow(std::array<std::array<unsigned char, Nb>, 4>& state, const int& i, const int& n);    // shift row i on n positions
 
-  void ShiftRows(unsigned char **state);
+  void ShiftRows(std::array<std::array<unsigned char, Nb>, 4>& state);
 
-  unsigned char xtime(unsigned char b);    // multiply on x
+  constexpr unsigned char xtime(const unsigned char& b)    // multiply on x
+  {
+    return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
+  }
 
-  unsigned char mul_bytes(unsigned char a, unsigned char b);
+  AES_CONSTEXPR_14 unsigned char mul_bytes(unsigned char a, unsigned char b);
 
-  void MixColumns(unsigned char **state);
+  void MixColumns(std::array<std::array<unsigned char, 4>, 4>& state);
 
-  void MixSingleColumn(unsigned char *r);
+  void MixSingleColumn(std::array<unsigned char, 4>& r);
 
-  void AddRoundKey(unsigned char **state, unsigned char *key);
+  void AddRoundKey(std::array<std::array<unsigned char, Nb>, 4>& state, const std::vector<unsigned char>& key);
 
-  void SubWord(unsigned char *a);
+  AES_CONSTEXPR_14 void SubWord(std::array<unsigned char, 4>& a);
 
-  void RotWord(unsigned char *a);
+  void RotWord(std::array<unsigned char, 4>& a);
 
-  void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
+  AES_CONSTEXPR_14 void XorWords(const std::array<unsigned char, 4>& a, const std::array<unsigned char, 4>& b, std::array<unsigned char, 4>& c);
 
-  void Rcon(unsigned char * a, int n);
+  void Rcon(std::array<unsigned char, 4>& a, const int& n);
 
-  void InvSubBytes(unsigned char **state);
+  void InvSubBytes(std::array<std::array<unsigned char, Nb>, 4>& state);
 
-  void InvMixColumns(unsigned char **state);
+  void InvMixColumns(std::array<std::array<unsigned char, Nb>, 4>& state);
 
-  void InvShiftRows(unsigned char **state);
+  void InvShiftRows(std::array<std::array<unsigned char, Nb>, 4>& state);
 
-  unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
+  std::vector<unsigned char> PaddingNulls(const std::vector<unsigned char>& in, const unsigned int& alignLen);
   
-  unsigned int GetPaddingLength(unsigned int len);
+  AES_CONSTEXPR_14 unsigned int GetPaddingLength(const unsigned int& len);
 
-  void KeyExpansion(unsigned char key[], unsigned char w[]);
+  void KeyExpansion(const std::vector<unsigned char>& key, std::vector<unsigned char>& w);
 
-  void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+  void EncryptBlock(const std::array<unsigned char, blockBytesLen>& in, std::array<unsigned char, blockBytesLen>& out, const std::vector<unsigned char>& roundKeys);
 
-  void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
+  void DecryptBlock(const std::vector<unsigned char>& in, std::vector<unsigned char>& out, const std::vector<unsigned char>& roundKeys);
 
-  void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+  AES_CONSTEXPR_14 void XorBlocks(const std::array<unsigned char, blockBytesLen>& a, const std::array<unsigned char, blockBytesLen>& b, std::array<unsigned char, blockBytesLen>& c);
 
 public:
-  AES(int keyLen = 256);
 
-  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
+  AES_CONSTEXPR_14 Aes();
 
-  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[]);
+  std::vector<unsigned char> EncryptECB(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key);
 
-  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  std::vector<unsigned char> DecryptECB(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key);
 
-  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv);
+  std::vector<unsigned char> EncryptCBC(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv);
 
-  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  std::vector<unsigned char> DecryptCBC(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv);
 
-  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv);
+  std::vector<unsigned char> EncryptCFB(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv);
+
+  std::vector<unsigned char> DecryptCFB(const std::vector<unsigned char>& in, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv);
   
-  void printHexArray (unsigned char a[], unsigned int n);
+  static void printHexArray(const std::vector<unsigned char>& a);
 
+  // For backwards compatibility. Prefer to use above function
 
-};
+  Aes(int keyLen);
 
-const unsigned char sbox[16][16] = {
+  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int &outLen);
+
+  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
+
+  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char * iv, unsigned int &outLen);
+
+  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char * iv);
+
+  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char * iv, unsigned int &outLen);
+
+  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char * iv);
+  
+  static void printHexArray (unsigned char a[], unsigned int n);
+
+private:
+  static constexpr std::array<std::array<unsigned char, 16>, 16> sbox = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
     0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0,
@@ -113,7 +140,7 @@ const unsigned char sbox[16][16] = {
     0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
   };
 
-const unsigned char inv_sbox[16][16] = {
+  static constexpr std::array<std::array<unsigned char, 16>, 16> inv_sbox = {
     0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
     0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
     0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87,
@@ -146,5 +173,8 @@ const unsigned char inv_sbox[16][16] = {
     0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61,
     0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26,
     0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d, };
+};
+
+using AES = Aes<>;
 
 #endif

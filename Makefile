@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -std=c++11
 
 all: clean build_test build_debug build_profile build_release
 
