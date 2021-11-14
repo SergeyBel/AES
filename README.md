@@ -33,7 +33,7 @@ http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 1. `git clone https://github.com/SergeyBel/AES.git`
 1. `docker-compose build`
 1. `docker-compose up -d`
-1. `docker-compose exec aes bash`
+1. use make commands
 
 There are four executables in `bin` folder:  
 * `test` - run tests  
@@ -43,9 +43,13 @@ There are four executables in `bin` folder:
 
 
 Build commands:  
-* `make all` - build all targets
+* `make build_all` - build all targets
 * `make build_test` - build `test` target
 * `make build_debug` - build `debug` target
 * `make build_profile` - build `profile` target
 * `make build_release` - build `release` target
+* `make test` - run tests
+* `make debug` - run debug version
+* `make profile` - run profile version
+* `make release` - run `release` version
 * `make clean` - clean `bin` directory
