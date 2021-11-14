@@ -1,9 +1,10 @@
 #ifndef _AES_H_
 #define _AES_H_
 
-#include<cstring>
+#include <cstring>
 #include <iostream>
 #include <stdio.h>
+#include <vector>
 
 using namespace std;
 
@@ -58,24 +59,43 @@ private:
 
   void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
+  vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len);
+
+  unsigned char *VectorToArray(vector<unsigned char> a);
+
 public:
   AES(int keyLen = 256);
 
-  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen);
+  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int &outLen);
 
-  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[]);
+  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
 
-  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
 
-  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv);
+  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
-  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen);
+  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
 
-  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv);
-  
-  void printHexArray (unsigned char a[], unsigned int n);
+  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
 
+
+  vector<unsigned char> EncryptECB(vector<unsigned char> in, vector<unsigned char> key);
+
+  vector<unsigned char> DecryptECB(vector<unsigned char> in, vector<unsigned char> key);
+
+  vector<unsigned char> EncryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+
+  vector<unsigned char> DecryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+
+  vector<unsigned char> EncryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+
+  vector<unsigned char> DecryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+
+
+  void printHexArray(unsigned char a[], unsigned int n);
+
+  void printHexVector(vector<unsigned char> a);
 };
 
 const unsigned char sbox[16][16] = {

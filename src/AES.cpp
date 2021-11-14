@@ -24,6 +24,7 @@ AES::AES(int keyLen)
   blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
 }
 
+
 unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
 {
   outLen = GetPaddingLength(inLen);
@@ -524,9 +525,75 @@ void AES::printHexArray (unsigned char a[], unsigned int n)
 	}
 }
 
+void AES::printHexVector (vector<unsigned char> a)
+{
+	for (unsigned int i = 0; i < a.size(); i++) {
+	  printf("%02x ", a[i]);
+	}
+}
+
+vector<unsigned char> AES::ArrayToVector(unsigned char *a, unsigned char len)
+{
+   vector<unsigned char> v(a, a + len * sizeof(unsigned char));
+   return v;
+}
+
+unsigned char *AES::VectorToArray(vector<unsigned char> a)
+{
+  return a.data();
+}
 
 
+vector<unsigned char> AES::EncryptECB(vector<unsigned char> in, vector<unsigned char> key)
+{
+  unsigned int outLen = 0;;
+  unsigned char *out = EncryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), outLen);
+  vector<unsigned char> v = ArrayToVector(out, outLen);
+  delete []out;
+  return v;
+}
+
+vector<unsigned char> AES::DecryptECB(vector<unsigned char> in, vector<unsigned char> key)
+{
+  unsigned char *out = DecryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key));
+  vector<unsigned char> v = ArrayToVector(out, (unsigned int)in.size());
+  delete []out;
+  return v;
+}
 
 
+vector<unsigned char> AES::EncryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv)
+{
+  unsigned int outLen = 0;
+  unsigned char *out = EncryptCBC(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), VectorToArray(iv),  outLen);
+  vector<unsigned char> v = ArrayToVector(out, outLen);
+  delete [] out;
+  return v;
+}
 
+vector<unsigned char> AES::DecryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv)
+{
+  unsigned char *out = DecryptCBC(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), VectorToArray(iv));
+  vector<unsigned char> v = ArrayToVector(out, (unsigned int)in.size());
+  delete [] out;
+  return v;
+}
+
+ vector<unsigned char> AES::EncryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv)
+{
+  unsigned int outLen = 0;
+  unsigned char *out = EncryptCFB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), VectorToArray(iv),  outLen);
+  vector<unsigned char> v = ArrayToVector(out, outLen);
+  delete [] out;
+  return v;
+}
+
+vector<unsigned char> AES::DecryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv)
+{
+  unsigned char *out = DecryptCFB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), VectorToArray(iv));
+  vector<unsigned char> v = ArrayToVector(out, (unsigned int)in.size());
+  delete [] out;
+  return v;
+
+}
 
