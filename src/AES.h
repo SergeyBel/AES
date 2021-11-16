@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <vector>
 #include <bitset>
+#include <immintrin.h>
 
 using namespace std;
 
@@ -19,7 +20,9 @@ class AES
   int Nk;
   int Nr;
 
+  #ifdef EXPERIMENTAL
   unsigned char *RoundedKeys;
+  #endif
 
   unsigned int blockBytesLen;
 
@@ -59,10 +62,6 @@ class AES
 
   void KeyExpansion(unsigned char key[], unsigned char w[]);
 
-  #ifdef EXPERIMENTAL
-  void KeyExpansion(unsigned char key[]);
-  #endif
-
   void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
 
   void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
@@ -90,6 +89,8 @@ public:
     instead they used the member variable 'RoundedKeys', this member vairable
     should be initialized first by calling the AES::KeyExpansion(unsigned char key[]) first
   */
+  void KeyExpansion(unsigned char key[]);
+
   unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned int &outLen);
   unsigned char *DecryptECB(unsigned char in[], unsigned int inLen);
   unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char *iv, unsigned int &outLen);

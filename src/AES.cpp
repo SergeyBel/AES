@@ -29,7 +29,9 @@ AES::AES(int keyLen)
 
 AES::~AES()
 {
+  #ifdef EXPERIMENTAL
   if(RoundedKeys!=NULL) delete [] RoundedKeys;
+  #endif
 }
 
 
