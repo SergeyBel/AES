@@ -5,8 +5,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
-#include <bitset>
-#include <immintrin.h>
 
 using namespace std;
 
