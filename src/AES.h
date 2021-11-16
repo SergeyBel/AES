@@ -9,6 +9,10 @@
 
 using namespace std;
 
+/* -DEXPERIMENTAL
+      flag to enable optimized and micro-optimized blocks of code
+*/
+
 class AES
 {
   int Nb;
