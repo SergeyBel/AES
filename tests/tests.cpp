@@ -1,4 +1,9 @@
+#ifndef CLASSIC_MAKE
 #include "gtest/gtest.h"
+#else
+#include <gtest/gtest.h>
+#endif
+
 #include <iostream>
 #include <vector>
 #include "../src/AES.h"
