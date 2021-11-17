@@ -287,7 +287,6 @@ void AES::EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char *
     state[i] = state[0] + Nb * i;
   }
 
-
   for (i = 0; i < 4; i++)
   {
     for (j = 0; j < Nb; j++)
@@ -332,7 +331,6 @@ void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char *
     state[i] = state[0] + Nb * i;
   }
 
-
   for (i = 0; i < 4; i++)
   {
     for (j = 0; j < Nb; j++) {
@@ -364,7 +362,6 @@ void AES::DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char *
   delete[] state[0];
   delete[] state;
 }
-
 
 void AES::SubBytes(unsigned char **state)
 {
@@ -719,4 +716,3 @@ vector<unsigned char> AES::DecryptCFB(vector<unsigned char> in, vector<unsigned 
   return v;
 
 }
-

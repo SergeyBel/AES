@@ -24,15 +24,11 @@ class AES
 
   void SubBytes(unsigned char **state);
 
-  void ShiftRow(unsigned char **state, int i, int n);    // shift row i on n positions
-
   void ShiftRows(unsigned char **state);
 
   unsigned char xtime(unsigned char b);    // multiply on x
 
   void MixColumns(unsigned char **state);
-
-  void MixSingleColumn(unsigned char *r);
 
   void AddRoundKey(unsigned char **state, unsigned char *key);
 
