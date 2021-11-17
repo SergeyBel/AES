@@ -298,49 +298,33 @@ unsigned char AES::xtime(unsigned char b)    // multiply on x
 
 
 
-/* Implementation taken from https://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example */
-void AES::MixSingleColumn(unsigned char *r) 
-{
-  unsigned char a[4];
-  unsigned char b[4];
-  unsigned char c;
-  unsigned char h;
-  /* The array 'a' is simply a copy of the input array 'r'
-  * The array 'b' is each element of the array 'a' multiplied by 2
-  * in Rijndael's Galois field
-  * a[n] ^ b[n] is element n multiplied by 3 in Rijndael's Galois field */ 
-  for(c=0;c<4;c++) 
-  {
-    a[c] = r[c];
-    /* h is 0xff if the high bit of r[c] is set, 0 otherwise */
-    h = (unsigned char)((signed char)r[c] >> 7); /* arithmetic right shift, thus shifting in either zeros or ones */
-    b[c] = r[c] << 1; /* implicitly removes high bit because b[c] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line */
-    b[c] ^= 0x1B & h; /* Rijndael's Galois field */
-  }
-  r[0] = b[0] ^ a[3] ^ a[2] ^ b[1] ^ a[1]; /* 2 * a0 + a3 + a2 + 3 * a1 */
-  r[1] = b[1] ^ a[0] ^ a[3] ^ b[2] ^ a[2]; /* 2 * a1 + a0 + a3 + 3 * a2 */
-  r[2] = b[2] ^ a[1] ^ a[0] ^ b[3] ^ a[3]; /* 2 * a2 + a1 + a0 + 3 * a3 */
-  r[3] = b[3] ^ a[2] ^ a[1] ^ b[0] ^ a[0]; /* 2 * a3 + a2 + a1 + 3 * a0 */
-}
-
-/* Performs the mix columns step. Theory from: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#The_MixColumns_step */
 void AES::MixColumns(unsigned char** state) 
 {
-  unsigned char *temp = new unsigned char[4];
-
-  for(int i = 0; i < 4; ++i)
+  unsigned char temp_state[4][4];
+  
+  for(size_t i=0; i<4; ++i)
   {
-    for(int j = 0; j < 4; ++j)
-    {
-      temp[j] = state[j][i]; //place the current state column in temp
-    }
-    MixSingleColumn(temp); //mix it using the wiki implementation
-    for(int j = 0; j < 4; ++j)
-    {
-      state[j][i] = temp[j]; //when the column is mixed, place it back into the state
-    }
+    memset(temp_state[i],0,4);
   }
-  delete[] temp;
+
+  for(size_t i=0; i<4; ++i)
+  {
+    for(size_t k=0; k<4; ++k)
+    {
+      for(size_t j=0; j<4; ++j)
+      {
+        if(CMDS[i][k]==1)
+          temp_state[i][j] ^= state[k][j];
+        else
+          temp_state[i][j] ^= GF_MUL_TABLE[CMDS[i][k]][state[k][j]];
+        }
+      }
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memcpy(state[i],temp_state[i],4);
+  }
 }
 
 void AES::AddRoundKey(unsigned char **state, unsigned char *key)
@@ -455,51 +439,30 @@ void AES::InvSubBytes(unsigned char **state)
 }
 
 
-unsigned char AES::mul_bytes(unsigned char a, unsigned char b) // multiplication a and b in galois field
-{
-    unsigned char p = 0;
-    unsigned char high_bit_mask = 0x80;
-    unsigned char high_bit = 0;
-    unsigned char modulo = 0x1B; /* x^8 + x^4 + x^3 + x + 1 */
-
-
-    for (int i = 0; i < 8; i++) {
-      if (b & 1) {
-           p ^= a;
-      }
-
-      high_bit = a & high_bit_mask;
-      a <<= 1;
-      if (high_bit) {
-          a ^= modulo;
-      }
-      b >>= 1;
-    }
-
-    return p;
-}
-
 
 void AES::InvMixColumns(unsigned char **state)
 {
-  unsigned char s[4], s1[4];
-  int i, j;
-
-  for (j = 0; j < Nb; j++)
+  unsigned char temp_state[4][4];
+  
+  for(size_t i=0; i<4; ++i)
   {
-    for (i = 0; i < 4; i++)
-    {
-      s[i] = state[i][j];
-    }
-    s1[0] = mul_bytes(0x0e, s[0]) ^ mul_bytes(0x0b, s[1]) ^ mul_bytes(0x0d, s[2]) ^ mul_bytes(0x09, s[3]);
-    s1[1] = mul_bytes(0x09, s[0]) ^ mul_bytes(0x0e, s[1]) ^ mul_bytes(0x0b, s[2]) ^ mul_bytes(0x0d, s[3]);
-    s1[2] = mul_bytes(0x0d, s[0]) ^ mul_bytes(0x09, s[1]) ^ mul_bytes(0x0e, s[2]) ^ mul_bytes(0x0b, s[3]);
-    s1[3] = mul_bytes(0x0b, s[0]) ^ mul_bytes(0x0d, s[1]) ^ mul_bytes(0x09, s[2]) ^ mul_bytes(0x0e, s[3]);
+    memset(temp_state[i],0,4);
+  }
 
-    for (i = 0; i < 4; i++)
+  for(size_t i=0; i<4; ++i)
+  {
+    for(size_t k=0; k<4; ++k)
     {
-      state[i][j] = s1[i];
+      for(size_t j=0; j<4; ++j)
+      {
+          temp_state[i][j] ^= GF_MUL_TABLE[INV_CMDS[i][k]][state[k][j]];
+      }
     }
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memcpy(state[i],temp_state[i],4);
   }
 }
 
