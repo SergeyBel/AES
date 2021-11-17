@@ -407,7 +407,7 @@ void AES::MixColumns(unsigned char** state)
 
   for(size_t i=0; i<4; ++i)
   {
-    memset(temp_state[i],0,4);
+    memset(temp_state[0],0,4); // change temp_state[i] to -> temp_state[0] (just testing github workflow with gtest)
   }
 
   for(size_t i=0; i<4; ++i)
