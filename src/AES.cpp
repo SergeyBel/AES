@@ -468,6 +468,7 @@ void AES::MixSingleColumn(unsigned char *r)
 /* Performs the mix columns step. Theory from: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#The_MixColumns_step */
 void AES::MixColumns(unsigned char** state) 
 {
+  #ifndef EXPERIMENTAL
   unsigned char *temp = new unsigned char[4];
 
   for(int i = 0; i < 4; ++i)
@@ -483,6 +484,33 @@ void AES::MixColumns(unsigned char** state)
     }
   }
   delete[] temp;
+  #else
+  unsigned char temp_state[4][4]; // <- please don't put this on heap if there is no error at the first place, because its faster this way
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memset(temp_state[i],0,4);
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    for(size_t k=0; k<4; ++k)
+    {
+      for(size_t j=0; j<4; ++j)
+      {
+        if(CMDS[i][k]==1)
+          temp_state[i][j] ^= state[k][j];
+        else
+          temp_state[i][j] ^= GF_MUL_TABLE[CMDS[i][k]][state[k][j]];
+        }
+      }
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memcpy(state[i],temp_state[i],4);
+  }
+  #endif
 }
 
 void AES::AddRoundKey(unsigned char **state, unsigned char *key)
@@ -670,6 +698,7 @@ unsigned char AES::mul_bytes(unsigned char a, unsigned char b) // multiplication
 
 void AES::InvMixColumns(unsigned char **state)
 {
+  #ifndef EXPERIMENTAL
   unsigned char s[4], s1[4];
   int i, j;
 
@@ -689,6 +718,30 @@ void AES::InvMixColumns(unsigned char **state)
       state[i][j] = s1[i];
     }
   }
+  #else
+  unsigned char temp_state[4][4]; // <- please don't put this on heap if there is no error at the first place, because its faster this way
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memset(temp_state[i],0,4);
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    for(size_t k=0; k<4; ++k)
+    {
+      for(size_t j=0; j<4; ++j)
+      {
+          temp_state[i][j] ^= GF_MUL_TABLE[INV_CMDS[i][k]][state[k][j]];
+      }
+    }
+  }
+
+  for(size_t i=0; i<4; ++i)
+  {
+    memcpy(state[i],temp_state[i],4);
+  }
+  #endif
 }
 
 void AES::InvShiftRows(unsigned char **state)
