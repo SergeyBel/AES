@@ -2,6 +2,10 @@
 
 Forked From : https://github.com/SergeyBel/AES
 
+### About this fork
+
+This fork was optimized and used by my file [encryption/decryption program](https://github.com/mrdcvlsc/bethela), the performance was not as fast as AES instruction sets on supported hardwares but fast enough as a software implementation.
+
 C++ AES(Advanced Encryption Standard) implementation  
  
 ![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
