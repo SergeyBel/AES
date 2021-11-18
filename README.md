@@ -1,7 +1,10 @@
 # AES
+
+Forked From : https://github.com/SergeyBel/AES
+
 C++ AES(Advanced Encryption Standard) implementation  
  
-![Build Status](https://travis-ci.org/SergeyBel/AES.svg?branch=master)
+![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
 
 
 **This class is very simple to use:**
