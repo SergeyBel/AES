@@ -8,6 +8,9 @@
 #include <vector>
 #include "../src/AES.h"
 
+using namespace Cipher;
+using namespace std;
+
 const unsigned int BLOCK_BYTES_LENGTH = 16 * sizeof(unsigned char);
 
 TEST(KeyLengths, KeyLength128) 

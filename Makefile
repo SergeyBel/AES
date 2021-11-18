@@ -37,17 +37,16 @@ clean:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	mkdir bin
-	g++ $(FLAGS) -g ./src/AES.cpp ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -o bin/test
+	g++ $(FLAGS) -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -o bin/test
 
 compile_debug:
-	g++ $(FLAGS) -g ./src/AES.cpp ./dev/main.cpp -o bin/debug
+	g++ $(FLAGS) -g ./dev/main.cpp -o bin/debug
 
 compile_profile:
-	g++ $(FLAGS) -pg ./src/AES.cpp ./dev/main.cpp -o bin/profile
+	g++ $(FLAGS) -pg ./dev/main.cpp -o bin/profile
 
 compile_release:
-	g++ $(FLAGS) -O2 ./src/AES.cpp ./dev/main.cpp -o bin/release
+	g++ $(FLAGS) -O2 ./dev/main.cpp -o bin/release
 
 run_test:
 	bin/test
