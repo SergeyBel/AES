@@ -12,7 +12,7 @@ namespace Cipher
         unsigned char *out = new unsigned char[outLen];
         unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
         KeyExpansion(key, roundKeys);
-        for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
         {
             EncryptBlock(alignIn + i, out + i, roundKeys);
         }
@@ -28,7 +28,7 @@ namespace Cipher
         outLen = GetPaddingLength(inLen);
         unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
         unsigned char *out = new unsigned char[outLen];
-        for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
         {
             EncryptBlock(alignIn + i, out + i, RoundedKeys);
         }
@@ -43,7 +43,7 @@ namespace Cipher
         unsigned char *out = new unsigned char[inLen];
         unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
         KeyExpansion(key, roundKeys);
-        for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
+        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
         {
             DecryptBlock(in + i, out + i, roundKeys);
         }
@@ -56,7 +56,7 @@ namespace Cipher
     unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen)
     {
         unsigned char *out = new unsigned char[inLen];
-        for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
+        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
         {
             DecryptBlock(in + i, out + i, RoundedKeys);
         }  

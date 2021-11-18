@@ -15,7 +15,7 @@ namespace Cipher
         int i;
         for (i = 0; i < 4; i++)
         {
-            a[i] = sbox[a[i] / 16][a[i] % 16];
+            a[i] = sbox[a[i]];
         }
     }
 
