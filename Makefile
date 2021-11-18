@@ -36,8 +36,8 @@ clean:
 
 gh_workflow:
 	mkdir bin
-	compile_test
-	run_test
+	make compile_test
+	make run_test
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
 

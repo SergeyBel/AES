@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef MIX_COLUMNS_CPP
 #define MIX_COLUMNS_CPP
-#endif
 
 #include "AES.h"
 

@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef ECP_MODE_CPP
 #define ECP_MODE_CPP
-#endif
 
 #include "AES.h"
 

@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef SUB_BYTES_CPP
 #define SUB_BYTES_CPP
-#endif
 
 #include "AES.h"
 

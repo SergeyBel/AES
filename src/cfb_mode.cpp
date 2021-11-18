@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef CFB_MODE_CPP
 #define CFB_MODE_CPP
-#endif
 
 #include "AES.h"
 

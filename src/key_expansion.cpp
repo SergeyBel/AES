@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef KEY_EXPANSION_CPP
 #define KEY_EXPANSION_CPP
-#endif
 
 #include "AES.h"
 

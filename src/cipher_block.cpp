@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef CIPHER_BLOCK_CPP
 #define CIPHER_BLOCK_CPP
-#endif
 
 #include "AES.h"
 

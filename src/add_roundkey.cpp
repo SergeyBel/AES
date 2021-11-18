@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef ADD_ROUND_KEY_CPP
 #define ADD_ROUND_KEY_CPP
-#endif
 
 #include "AES.h"
 

@@ -1,7 +1,5 @@
-#ifndef BUILD_LIB
 #ifndef SHIFT_ROWS_CPP
 #define SHIFT_ROWS_CPP
-#endif
 
 #include "AES.h"
 
