@@ -7,7 +7,6 @@ namespace Cipher
 {
     AES::AES(int keyLen)
     {
-        this->Nb = 4;
         switch (keyLen)
         {
           case 128:
@@ -27,7 +26,6 @@ namespace Cipher
         }
 
         RoundedKeys = NULL;
-        blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
     }
 
     AES::~AES()

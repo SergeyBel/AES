@@ -10,18 +10,17 @@ namespace Cipher
         outLen = GetPaddingLength(inLen);
         unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
         unsigned char *out = new unsigned char[outLen];
-        unsigned char *block = new unsigned char[blockBytesLen];
+        unsigned char block[AES_BLOCK_LEN];
         unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
         KeyExpansion(key, roundKeys);
-        memcpy(block, iv, blockBytesLen);
-        for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+        memcpy(block, iv, AES_BLOCK_LEN);
+        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
         {
-            XorBlocks(block, alignIn + i, block, blockBytesLen);
+            XorBlocks(block, alignIn + i, block, AES_BLOCK_LEN);
             EncryptBlock(block, out + i, roundKeys);
-            memcpy(block, out + i, blockBytesLen);
+            memcpy(block, out + i, AES_BLOCK_LEN);
         }
         
-        delete[] block;
         delete[] alignIn;
         delete[] roundKeys;
 
@@ -33,16 +32,15 @@ namespace Cipher
         outLen = GetPaddingLength(inLen);
         unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
         unsigned char *out = new unsigned char[outLen];
-        unsigned char *block = new unsigned char[blockBytesLen];
-        memcpy(block, iv, blockBytesLen);
-        for (unsigned int i = 0; i < outLen; i+= blockBytesLen)
+        unsigned char block[AES_BLOCK_LEN];
+        memcpy(block, iv, AES_BLOCK_LEN);
+        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
         {
-            XorBlocks(block, alignIn + i, block, blockBytesLen);
+            XorBlocks(block, alignIn + i, block, AES_BLOCK_LEN);
             EncryptBlock(block, out + i, RoundedKeys);
-            memcpy(block, out + i, blockBytesLen);
+            memcpy(block, out + i, AES_BLOCK_LEN);
         }
         
-        delete[] block;
         delete[] alignIn;
 
         return out;
@@ -51,18 +49,17 @@ namespace Cipher
     unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv)
     {
         unsigned char *out = new unsigned char[inLen];
-        unsigned char *block = new unsigned char[blockBytesLen];
+        unsigned char block[AES_BLOCK_LEN];
         unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
         KeyExpansion(key, roundKeys);
-        memcpy(block, iv, blockBytesLen);
-        for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
+        memcpy(block, iv, AES_BLOCK_LEN);
+        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
         {
             DecryptBlock(in + i, out + i, roundKeys);
-            XorBlocks(block, out + i, out + i, blockBytesLen);
-            memcpy(block, in + i, blockBytesLen);
+            XorBlocks(block, out + i, out + i, AES_BLOCK_LEN);
+            memcpy(block, in + i, AES_BLOCK_LEN);
         }
         
-        delete[] block;
         delete[] roundKeys;
 
         return out;
@@ -71,16 +68,14 @@ namespace Cipher
     unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char * iv)
     {
         unsigned char *out = new unsigned char[inLen];
-        unsigned char *block = new unsigned char[blockBytesLen];
-        memcpy(block, iv, blockBytesLen);
-        for (unsigned int i = 0; i < inLen; i+= blockBytesLen)
+        unsigned char block[AES_BLOCK_LEN];
+        memcpy(block, iv, AES_BLOCK_LEN);
+        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
         {
             DecryptBlock(in + i, out + i, RoundedKeys);
-            XorBlocks(block, out + i, out + i, blockBytesLen);
-            memcpy(block, in + i, blockBytesLen);
+            XorBlocks(block, out + i, out + i, AES_BLOCK_LEN);
+            memcpy(block, in + i, AES_BLOCK_LEN);
         }
-        
-        delete[] block;
 
         return out;
     }

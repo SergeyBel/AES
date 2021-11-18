@@ -15,12 +15,12 @@ namespace Cipher
 
     unsigned int AES::GetPaddingLength(unsigned int len)
     {
-        unsigned int lengthWithPadding =  (len / blockBytesLen);
-        if (len % blockBytesLen) {
+        unsigned int lengthWithPadding =  (len / AES_BLOCK_LEN);
+        if (len % AES_BLOCK_LEN) {
             lengthWithPadding++;
         }
         
-        lengthWithPadding *=  blockBytesLen;
+        lengthWithPadding *= AES_BLOCK_LEN;
         
         return lengthWithPadding;
     }
