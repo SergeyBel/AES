@@ -44,7 +44,7 @@ https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 
 http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
-
+<!--
 **Development:**
 1. `git clone https://github.com/SergeyBel/AES.git`
 1. `docker-compose build`
@@ -69,3 +69,4 @@ Build commands:
 * `make profile` - run profile version
 * `make release` - run `release` version
 * `make clean` - clean `bin` directory
+-->
