@@ -34,6 +34,11 @@ clean:
 
 ########################## CLASSIC MAKEFILE ##########################
 
+gh_workflow:
+	mkdir bin
+	compile_test
+	run_test
+
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
