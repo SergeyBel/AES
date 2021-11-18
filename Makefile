@@ -42,7 +42,7 @@ gh_workflow:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	g++ $(FLAGS) -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -o bin/test
+	g++ $(FLAGS) -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -fsanitize=address -o bin/test
 
 compile_debug:
 	g++ $(FLAGS) -g ./dev/main.cpp -o bin/debug
