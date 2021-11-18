@@ -21,8 +21,5 @@ jobs:
       
     - uses: actions/checkout@v2
     
-    - name: compile test
-      run: make compile_test
-      
-    - name: run test
-      run: make run_test
+    - name: compile & run tests
+      run: make gh_workflow
