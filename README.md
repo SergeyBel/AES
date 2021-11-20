@@ -1,7 +1,7 @@
 # AES
 C++ AES(Advanced Encryption Standard) implementation  
  
-![Build Status](https://travis-ci.org/SergeyBel/AES.svg?branch=master)
+![Build Status](https://github.com/SergeyBel/AES/actions/workflows/aes-ci.yml/badge.svg?branch=master)
 
 
 **This class is very simple to use:**

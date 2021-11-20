@@ -1,0 +1,34 @@
+
+
+name: CI
+
+on:
+  push:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install gtest
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgtest-dev cmake
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp lib/*.a /usr/lib
+
+      - name: Build
+        run: |
+          mkdir bin 
+          make workflow_build
+
+      - name: Test
+        run: ./bin/test
+      
+      
+      
