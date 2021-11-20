@@ -23,7 +23,9 @@ jobs:
           sudo cp lib/*.a /usr/lib
 
       - name: Build
-        run: sudo make workflow_build
+        run: |
+          mkdir bin 
+          make workflow_build
 
       - name: Test
         run: ./bin/test
