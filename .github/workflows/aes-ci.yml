@@ -15,12 +15,12 @@ jobs:
       
       - name: Install gtest
         run: |
-          sudo apt-get install cmake
-          sudo apt-get install libgtest-dev
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgtest-dev cmake
           cd /usr/src/gtest
           sudo cmake CMakeLists.txt
           sudo make
-          sudo cp *.a /usr/lib
+          sudo cp lib/*.a /usr/lib
 
       - name: Build
         run: make workflow_build
