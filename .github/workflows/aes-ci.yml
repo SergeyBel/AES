@@ -21,6 +21,7 @@ jobs:
           sudo cmake CMakeLists.txt
           sudo make
           sudo cp lib/*.a /usr/lib
+          sudo ls -la /usr/lib
 
       - name: Build
         run: make workflow_build
