@@ -13,4 +13,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 
 WORKDIR /app
 
-ENTRYPOINT make all && bash
+ENTRYPOINT bash
