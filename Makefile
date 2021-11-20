@@ -29,3 +29,8 @@ release:
 clean:
 	docker-compose exec aes rm -rf bin 
 	docker-compose exec aes mkdir bin -p
+
+
+workflow_build:
+	g++ $(FLAGS) -g -pthread ./src/AES.cpp ./tests/tests.cpp /usr/lib/libgtest.a -o bin/test	
+
