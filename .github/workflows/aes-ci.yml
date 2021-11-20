@@ -12,9 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Install gtest
+        run: |
+          apt-get install cmake
+          apt-get install libgtest-dev
+          cd /usr/src/gtest
+          cmake CMakeLists.txt
+          make
+          cp *.a /usr/lib
 
       - name: Build
         run: make workflow_build
 
       - name: Test
         run: ./bin/test
+      
+      
+      
