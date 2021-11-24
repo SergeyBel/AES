@@ -8,6 +8,12 @@
 
 using namespace std;
 
+enum class AESKeyLength {
+  AES_128,
+  AES_192,
+  AES_256
+};
+
 class AES
 {
 private:
@@ -60,7 +66,7 @@ private:
   unsigned char *VectorToArray(vector<unsigned char> a);
 
 public:
-  AES(int keyLen = 256);
+  explicit AES(AESKeyLength keyLength = AESKeyLength::AES_256);
 
   unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int &outLen);
 

@@ -1,24 +1,22 @@
 #include "AES.h"
 
-AES::AES(int keyLen)
+AES::AES(AESKeyLength keyLength)
 {
   this->Nb = 4;
-  switch (keyLen)
+  switch (keyLength)
   {
-  case 128:
+  case AESKeyLength::AES_128:
     this->Nk = 4;
     this->Nr = 10;
     break;
-  case 192:
+  case AESKeyLength::AES_192:
     this->Nk = 6;
     this->Nr = 12;
     break;
-  case 256:
+  case AESKeyLength::AES_256:
     this->Nk = 8;
     this->Nr = 14;
     break;
-  default:
-    throw "Incorrect key length";
   }
 
   blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
