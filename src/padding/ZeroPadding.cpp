@@ -6,9 +6,9 @@
 
 namespace Padding
 {
-    size_t ZeroNulls::AddPadding(Krypt::Bytes*& src, size_t len, size_t CIPHER_BLOCKSIZE)
+    size_t ZeroNulls::AddPadding(Krypt::Bytes*& src, size_t len, size_t BLOCKSIZE)
     {
-        size_t paddings = CIPHER_BLOCKSIZE-(len%CIPHER_BLOCKSIZE);
+        size_t paddings = BLOCKSIZE-(len%BLOCKSIZE);
         size_t paddedLen = paddings+len;
         Krypt::Bytes* paddedBlock = new Krypt::Bytes[paddedLen];
 
@@ -20,10 +20,23 @@ namespace Padding
         return paddedLen;
     }
 
-    size_t ZeroNulls::RemovePadding(Krypt::Bytes*& src, size_t len, size_t CIPHER_BLOCKSIZE)
+    size_t ZeroNulls::RemovePadding(Krypt::Bytes*& src, size_t len, size_t BLOCKSIZE)
     {
+        #ifndef PADDING_CHECK_DISABLE
+        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        {
+            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+        }
+        #endif
+
+        #ifndef PADDING_CHECK_DISABLE
+        if(src[len-1]!=0x00)
+            throw InvalidPadding("ZeroNulls: does not match the padding scheme used in `src`");
+        #endif
+
         size_t paddings = 0, noPaddingLength = 0;
-        for(size_t i=0; i<CIPHER_BLOCKSIZE; ++i)
+        for(size_t i=0; i<BLOCKSIZE; ++i)
             if(src[len-1-i]==0x00) paddings++;
             else break;
 
@@ -36,10 +49,23 @@ namespace Padding
         return len-paddings;
     }
 
-    size_t ZeroNulls::GetNoPaddingLength(const Krypt::Bytes* src, size_t len, size_t CIPHER_BLOCKSIZE)
+    size_t ZeroNulls::GetNoPaddingLength(const Krypt::Bytes* src, size_t len, size_t BLOCKSIZE)
     {
+        #ifndef PADDING_CHECK_DISABLE
+        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        {
+            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+        }
+        #endif
+        
+        #ifndef PADDING_CHECK_DISABLE
+        if(src[len-1]!=0x00)
+            throw InvalidPadding("ZeroNulls: does not match the padding scheme used in `src`");
+        #endif
+
         size_t paddings = 0;
-        for(size_t i=0; i<CIPHER_BLOCKSIZE; ++i)
+        for(size_t i=0; i<BLOCKSIZE; ++i)
             if(src[len-1-i]==0x00) paddings++;
             else break;
         

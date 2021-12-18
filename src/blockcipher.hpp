@@ -50,14 +50,14 @@ namespace Krypt
 
         public:
 
-            /// encrypts a 16 byte block of [unsigned char*|Krypt::Bytes*]
-            void EncryptBlock(unsigned char *in, unsigned char *out);
+            /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
+            void EncryptBlock(Bytes *in, Bytes *out);
 
-            /// encrypts a 16 byte block of [unsigned char*|Krypt::Bytes*]
-            void DecryptBlock(unsigned char *in, unsigned char *out);
+            /// decrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
+            void DecryptBlock(Bytes *in, Bytes *out);
 
-
-            void setKey(Bytes* ByteArray, size_t keyLen);
+            /// initialize the round key from a key
+            void setKey(Bytes* key, size_t keyLen);
             AES(Bytes* ByteArray, size_t keyLen);
             ~AES();
     };

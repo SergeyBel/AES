@@ -28,19 +28,29 @@ namespace Padding
         return paddedLen;
     }
 
-    size_t ISO_IEC_7816_4::RemovePadding(Krypt::Bytes*& src, size_t originLen, size_t BLOCKSIZE)
+    size_t ISO_IEC_7816_4::RemovePadding(Krypt::Bytes*& src, size_t len, size_t BLOCKSIZE)
     {
+        #ifndef PADDING_CHECK_DISABLE
+        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        {
+            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+        }
+        #endif
+
         Krypt::Bytes curr;
         size_t paddings = 0, i;
+
+        #ifndef PADDING_CHECK_DISABLE
         for(i=1; i<BLOCKSIZE; ++i)
         {
-            if(src[originLen-i]==0x80) break;
-            if(src[originLen-i]!=0x00)
-                throw std::logic_error("wrong padding for ISO_IEC");
-                // throw OneZeroPadding("Detected an Invalid Padding Scheme for OneZeroPadding");
+            if(src[len-i]==0x80) break;
+            if(src[len-i]!=0x00)
+                throw InvalidPadding("ISO_IEC_7816_4: does not match the padding scheme used in `src`");
         }
+        #endif
 
-        size_t noPaddingLength = originLen-i;
+        size_t noPaddingLength = len-i;
         Krypt::Bytes* NoPadding = new Krypt::Bytes[noPaddingLength];
         memcpy(NoPadding,src,noPaddingLength);
         delete [] src;
@@ -49,19 +59,29 @@ namespace Padding
         return noPaddingLength;
     }
 
-    size_t ISO_IEC_7816_4::GetNoPaddingLength(const Krypt::Bytes* src, size_t originLen, size_t BLOCKSIZE)
+    size_t ISO_IEC_7816_4::GetNoPaddingLength(const Krypt::Bytes* src, size_t len, size_t BLOCKSIZE)
     {
+        #ifndef PADDING_CHECK_DISABLE
+        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        {
+            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+        }
+        #endif
+
         Krypt::Bytes curr;
         size_t paddings = 0, i;
+        
+        #ifndef PADDING_CHECK_DISABLE
         for(i=1; i<BLOCKSIZE; ++i)
         {
-            if(src[originLen-i]==0x80) break;
-            if(src[originLen-i]!=0x00)
-                throw std::logic_error("wrong padding for ISO_IEC");
-                // throw OneZeroPadding("Detected an Invalid Padding Scheme for OneZeroPadding");
+            if(src[len-i]==0x80) break;
+            if(src[len-i]!=0x00)
+                throw InvalidPadding("ISO_IEC_7816_4: does not match the padding scheme used in `src`");
         }
+        #endif
 
-        size_t noPaddingLength = originLen-i;
+        size_t noPaddingLength = len-i;
         return noPaddingLength;
     }
 }

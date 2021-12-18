@@ -8,6 +8,28 @@
 
 namespace Padding
 {
+    class InvalidPadding : public std::exception
+    {
+        public:
+        InvalidPadding(const char* info) : msg(info) {}
+        const char* msg;
+        const char* what() const throw ()
+        {
+            return msg;
+        }
+    };
+
+    class InvalidPaddedLength : public std::exception
+    {
+        public:
+        InvalidPaddedLength(const char* paddingSchemName) : msg(paddingSchemName) {}
+        const char* msg;
+        const char* what() const throw ()
+        {
+            return msg;
+        }
+    };
+
     class PADDING
     {
         public:

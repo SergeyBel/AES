@@ -5,9 +5,9 @@
 
 namespace Krypt
 {
-    void AES::EncryptBlock(Krypt::Bytes *src, Krypt::Bytes *dest)
+    void AES::EncryptBlock(Bytes *src, Bytes *dest)
     {
-        Krypt::Bytes state[4][4];
+        Bytes state[4][4];
         uint8_t i, j, round;
 
         for (i = 0; i < 4; i++)
@@ -41,10 +41,9 @@ namespace Krypt
         }
     }
 
-    /// @def encrypts a 16 byte block of [unsigned char*|Krypt::Bytes*
-    void AES::DecryptBlock(Krypt::Bytes *src, Krypt::Bytes *dest)
+    void AES::DecryptBlock(Bytes *src, Bytes *dest)
     {
-        Krypt::Bytes state[4][4];
+        Bytes state[4][4];
         uint8_t i, j, round;
 
         for (i = 0; i < 4; i++)

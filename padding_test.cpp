@@ -15,7 +15,7 @@ void printHexArray(const std::string& label, unsigned char a[], unsigned int n) 
 int main()
 {
     unsigned char plain[] = {
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa
+        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x80
     };
 
     Padding::ZeroNulls zeroNull;
@@ -27,10 +27,12 @@ int main()
     memcpy(heap_plain,plain,sizeof(plain));
     printHexArray("origin : ",heap_plain,sizeof(plain));
 
-    size_t newLen = pkcs.AddPadding(heap_plain,sizeof(plain),BLOCK_SIZE); // pad the array in heap
+    size_t noPadLen0 = isoiec.RemovePadding(heap_plain,sizeof(plain),BLOCK_SIZE);
+
+    size_t newLen = isoiec.AddPadding(heap_plain,sizeof(plain),BLOCK_SIZE); // pad the array in heap
     printHexArray("padded : ",heap_plain,newLen);
 
-    size_t noPadLen = pkcs.RemovePadding(heap_plain,newLen,BLOCK_SIZE);
+    size_t noPadLen = isoiec.RemovePadding(heap_plain,newLen,BLOCK_SIZE);
     printHexArray("recorv : ",heap_plain,noPadLen);
 
     delete [] heap_plain;
