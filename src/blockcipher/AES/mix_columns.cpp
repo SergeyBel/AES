@@ -1,9 +1,9 @@
 #ifndef MIX_COLUMNS_CPP
 #define MIX_COLUMNS_CPP
 
-#include "AES.h"
+#include "../../blockcipher.hpp"
 
-namespace Cipher
+namespace Krypt
 {
     void AES::MixColumns(unsigned char state[4][4]) 
     {

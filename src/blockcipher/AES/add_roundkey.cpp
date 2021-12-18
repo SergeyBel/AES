@@ -1,9 +1,9 @@
 #ifndef ADD_ROUND_KEY_CPP
 #define ADD_ROUND_KEY_CPP
 
-#include "AES.h"
+#include "../../blockcipher.hpp"
 
-namespace Cipher
+namespace Krypt
 {
     void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key)
     {

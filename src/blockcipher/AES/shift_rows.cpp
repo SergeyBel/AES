@@ -1,9 +1,9 @@
 #ifndef SHIFT_ROWS_CPP
 #define SHIFT_ROWS_CPP
 
-#include "AES.h"
+#include "../../blockcipher.hpp"
 
-namespace Cipher
+namespace Krypt
 {
     void AES::ShiftRows(unsigned char state[4][4])
     {

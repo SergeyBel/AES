@@ -1,103 +1,19 @@
-#ifndef _AES_H_
-#define _AES_H_
+#ifndef USED_COMMON_TYPES_HPP
+#define USED_COMMON_TYPES_HPP
 
-#include <cstring>
 #include <iostream>
-#include <stdio.h>
 #include <vector>
 
-namespace Cipher
+namespace Krypt
 {
-    #define AES_BLOCK_LEN 16
-    #define Nb 4
-    typedef unsigned char byte;
-    typedef std::vector<byte> bytestream;
+    /// Block Size in Bytes
+    const static int AES_BLOCKSIZE = 16;
+    const static int Nb = 4;
 
-    class AES
-    {
-    
-    private:
+    typedef unsigned char Bytes;
+    typedef std::vector<Bytes> ByteStream;
 
-        int Nk;
-        int Nr;
-
-        unsigned char *RoundedKeys;
-
-        void SubBytes(unsigned char state[4][4]);
-        void InvSubBytes(unsigned char state[4][4]);
-
-        void ShiftRows(unsigned char state[4][4]);
-        void InvShiftRows(unsigned char state[4][4]);
-
-        unsigned char xtime(unsigned char b);    // multiply on x
-
-        void MixColumns(unsigned char state[4][4]);
-        void InvMixColumns(unsigned char state[4][4]);
-
-        void AddRoundKey(unsigned char state[4][4], unsigned char *key);
-
-        void SubWord(unsigned char *a);
-        void RotWord(unsigned char *a);
-        void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
-        void Rcon(unsigned char * a, int n);
-        void KeyExpansion(unsigned char key[], unsigned char w[]);
-            
-        unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
-        unsigned int GetPaddingLength(unsigned int len);
-
-        void EncryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
-        void DecryptBlock(unsigned char in[], unsigned char out[], unsigned  char key[]);
-
-        void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
-
-        bytestream ArrayToVector(unsigned char *a, unsigned char len);
-        unsigned char *VectorToArray(bytestream a);
-
-    public:
-
-        AES(int keyLen = 256);
-        ~AES();
-
-        unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int &outLen);
-        unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
-        unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
-        unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
-        unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
-        unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
-
-        /* --------------------------------------------------------------------------------------- */ /*
-            The set of functions below does not perform key expansion inside them,
-            instead they used the member variable 'RoundedKeys', this member vairable
-            should be initialized first by calling the AES::KeyExpansion(unsigned char key[]) first  */
-            
-        void KeyExpansion(unsigned char key[]);
-
-        unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned int &outLen);
-        unsigned char *DecryptECB(unsigned char in[], unsigned int inLen);
-        unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char *iv, unsigned int &outLen);
-        unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char *iv);
-        unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char *iv, unsigned int &outLen);
-        unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char *iv);
-
-        /* --------------------------------------------------------------------------------------- */
-
-        bytestream EncryptECB(bytestream in, bytestream key);
-        bytestream DecryptECB(bytestream in, bytestream key);
-
-        bytestream EncryptCBC(bytestream in, bytestream key, bytestream iv);
-        bytestream DecryptCBC(bytestream in, bytestream key, bytestream iv);
-
-        bytestream EncryptCFB(bytestream in, bytestream key, bytestream iv);
-        bytestream DecryptCFB(bytestream in, bytestream key, bytestream iv);
-
-        // ----------------------------------------------------------------------------------------- //
-
-        void printHexArray(unsigned char a[], unsigned int n);
-        void printHexVector(bytestream a);
-    };
-
-    static const unsigned char sbox[256] =
-    {
+    static const unsigned char sbox[256] = {
         0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76,
         0xca ,0x82 ,0xc9 ,0x7d ,0xfa ,0x59 ,0x47 ,0xf0 ,0xad ,0xd4 ,0xa2 ,0xaf ,0x9c ,0xa4 ,0x72 ,0xc0,
         0xb7 ,0xfd ,0x93 ,0x26 ,0x36 ,0x3f ,0xf7 ,0xcc ,0x34 ,0xa5 ,0xe5 ,0xf1 ,0x71 ,0xd8 ,0x31 ,0x15,
@@ -116,8 +32,7 @@ namespace Cipher
         0x8c ,0xa1 ,0x89 ,0x0d ,0xbf ,0xe6 ,0x42 ,0x68 ,0x41 ,0x99 ,0x2d ,0x0f ,0xb0 ,0x54 ,0xbb ,0x16
     };
 
-    const unsigned char inv_sbox[256] =
-    {
+    const unsigned char inv_sbox[256] = {
         0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
         0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
         0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
@@ -137,10 +52,10 @@ namespace Cipher
     };
 
     /// Galois Multiplication lookup tables
-    static const unsigned char GF_MUL_TABLE[15][256] =
-    {
+    static const unsigned char GF_MUL_TABLE[15][256] = {
+
         {},{},
-        
+
         // mul 2
         {
             0x00,0x02,0x04,0x06,0x08,0x0a,0x0c,0x0e,0x10,0x12,0x14,0x16,0x18,0x1a,0x1c,0x1e,
@@ -269,8 +184,7 @@ namespace Cipher
     };
 
     /// circulant MDS matrix
-    static const unsigned char CMDS[4][4] =
-    {
+    static const unsigned char CMDS[4][4] = {
         {2,3,1,1},
         {1,2,3,1},
         {1,1,2,3},
@@ -278,23 +192,12 @@ namespace Cipher
     };
 
     /// Inverse circulant MDS matrix
-    static const unsigned char INV_CMDS[4][4] =
-    {
+    static const unsigned char INV_CMDS[4][4] = {
         {14,11,13,9},
         {9,14,11,13},
         {13,9,14,11},
         {11,13,9,14}
     };
 }
-
-#ifndef BUILD_LIB
-
-#include "AES.cpp"
-
-#include "ecb_mode.cpp"
-#include "cbc_mode.cpp"
-#include "cfb_mode.cpp"
-
-#endif
 
 #endif

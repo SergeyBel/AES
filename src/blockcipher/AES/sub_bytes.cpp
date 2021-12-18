@@ -1,9 +1,9 @@
 #ifndef SUB_BYTES_CPP
 #define SUB_BYTES_CPP
 
-#include "AES.h"
+#include "../../blockcipher.hpp"
 
-namespace Cipher
+namespace Krypt
 {
     void AES::SubBytes(unsigned char state[4][4])
     {
