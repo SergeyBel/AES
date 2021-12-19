@@ -15,7 +15,7 @@ void printHexArray(const std::string& label, unsigned char a[], unsigned int n) 
 int main()
 {
     unsigned char plain[] = {
-        0x00, 0x11, 0x22
+        0x00, 0x11, 0x22, 0x33
     };
 
     {

@@ -51,14 +51,14 @@ namespace Krypt::Mode
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
     };
 
-    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    // class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
-    // {
-    //     public:
-    //         CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
-    //         std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
-    //         std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
-    // };
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+    {
+        public:
+            CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
+            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
+            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+    };
 }
 
 #include "mode/cbc_mode.cpp"
