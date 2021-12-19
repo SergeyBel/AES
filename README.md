@@ -53,8 +53,10 @@ int main()
 
 <br>
 
-**Support**
+**Inside the ```Krypt``` namespace**
 
-- Block Cipher: ```AES```
-- Encryption modes: ```ECB```, ```CBC```, ```CFB```
-- Padding:```ZeroNulls```, ```ANSI_X9_23```, ```ISO_IEC_7816_4```, ```PKCS_5_7```
+| sub namespace | classes |
+| --- | --- |
+| ```BlockCipher``` | ```AES``` |
+| ```Padding``` | ```ZeroNulls```, ```ANSI_X9_23```, ```ISO_IEC_7816_4```, ```PKCS_5_7``` |
+| ```Mode``` | ```ECB```, ```CBC```, ```CFB``` |
