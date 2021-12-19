@@ -49,10 +49,12 @@ int main()
 }
 ```
 
+-------------
+
+<br>
+
 **Support**
 
-Block Cipher: AES
-
-Encryption modes: ECB, CBC, CFB
-
-Padding: ANSI X9.23, PKCS#5 and PKCS#7, ISO/IEC 7816-4, Zero padding
+- Block Cipher: ```AES```
+- Encryption modes: ```ECB```, ```CBC```, ```CFB```
+- Padding:```ZeroNulls```, ```ANSI_X9_23```, ```ISO_IEC_7816_4```, ```PKCS_5_7```
