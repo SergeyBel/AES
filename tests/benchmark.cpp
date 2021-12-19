@@ -28,7 +28,7 @@ std::vector<unsigned char> randomArray(size_t n)
 
 static void AES_EncryptECB_100MB(benchmark::State& state) {
 
-    std::vector<unsigned char> plain = randomArray(MB(2));
+    std::vector<unsigned char> plain = randomArray(MB(10));
 
     // if you want to AES192 or AES256, just increase the size of the key array
     // the AES class will automatically detect it
@@ -52,7 +52,7 @@ BENCHMARK(AES_EncryptECB_100MB);
 
 static void AES_EncryptCBC_100MB(benchmark::State& state) {
 
-    std::vector<unsigned char> plain = randomArray(MB(2));
+    std::vector<unsigned char> plain = randomArray(MB(10));
 
     // if you want to AES192 or AES256, just increase the size of the key array
     // the AES class will automatically detect it
@@ -81,7 +81,7 @@ BENCHMARK(AES_EncryptCBC_100MB);
 
 static void AES_EncryptCBC(benchmark::State& state) {
 
-    std::vector<unsigned char> plain = randomArray(MB(2));
+    std::vector<unsigned char> plain = randomArray(MB(10));
 
     // if you want to AES192 or AES256, just increase the size of the key array
     // the AES class will automatically detect it
