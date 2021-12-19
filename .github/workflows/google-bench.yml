@@ -1,0 +1,25 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: install cmake
+      run: sudo apt-get install cmake
+
+    - name: install google-benchmark
+      run: sudo apt-get install libbenchmark-dev
+
+    - uses: actions/checkout@v2
+    
+    - name: compile & run bench
+      run: make gh_bench
