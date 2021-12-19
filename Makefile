@@ -36,7 +36,7 @@ clean:
 
 gh_bench:
 	mkdir bin
-	g++ tests/benchmark.cpp -lbenchmark -lpthread -o bin/benchmark
+	g++ tests/benchmark.cpp -lbenchmark -lpthread -o bin/benchmark -O3 -march=native
 	bin/benchmark
 
 gh_test:
