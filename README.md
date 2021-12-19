@@ -28,9 +28,10 @@ int main()
         0x88, 0x99, 0xaa, 0xbb
     };
 
-    // if you want to AES192 or AES256, just increase the size of the key array
-    // the AES class will automatically detect it
-    unsigned char aes128key[] = {
+    // if you want to use AES192 or AES256, just increase the size of the key to
+    // 24 or 32... the AES class will automatically detect it, it will aslo throw
+    // an error if the key length not correct
+    unsigned char aes128key[16] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
