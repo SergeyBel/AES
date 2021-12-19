@@ -5,51 +5,6 @@
 
 namespace Krypt::BlockCipher
 {
-    // Bytes AES::xtime(Bytes b)    // multiply on x
-    // {
-    //     return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
-    // }
-
-    // void AES::SubWord(Bytes *a)
-    // {
-    //     int i;
-    //     for (i = 0; i < 4; i++)
-    //     {
-    //         a[i] = sbox[a[i]];
-    //     }
-    // }
-
-    // void AES::RotWord(Bytes *a)
-    // {
-    //     Bytes c = a[0];
-    //     a[0] = a[1];
-    //     a[1] = a[2];
-    //     a[2] = a[3];
-    //     a[3] = c;
-    // }
-
-    // void AES::XorWords(Bytes *a, Bytes *b, Bytes *c)
-    // {
-    //     int i;
-    //     for (i = 0; i < 4; i++)
-    //     {
-    //         c[i] = a[i] ^ b[i];
-    //     }
-    // }
-
-    // void AES::Rcon(Bytes * a, int n)
-    // {
-    //     int i;
-    //     Bytes c = 1;
-    //     for (i = 0; i < n - 1; i++)
-    //     {
-    //         c = xtime(c);
-    //     }
-
-    //     a[0] = c;
-    //     a[1] = a[2] = a[3] = 0;
-    // }
-
     void AES::KeyExpansion(const Bytes* key)
     {
         Bytes *w = new Bytes[4 * Nb * (Nr + 1)];

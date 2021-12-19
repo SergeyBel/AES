@@ -44,13 +44,6 @@ namespace Krypt::BlockCipher
 
             void AddRoundKey(unsigned char state[4][4], unsigned char *key);
 
-            // unsigned char xtime(unsigned char b);    // multiply on x
-            // void SubWord(unsigned char *a);
-            // void RotWord(unsigned char *a);
-            // void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
-            // void Rcon(unsigned char * a, int n);
-            // void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
-
         public:
 
             /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
