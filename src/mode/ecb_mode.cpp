@@ -1,7 +1,6 @@
 #ifndef ECP_MODE_CPP
 #define ECP_MODE_CPP
 
-#include "../functions.hpp"
 #include "../mode.hpp"
 
 namespace Krypt::Mode
@@ -47,38 +46,6 @@ namespace Krypt::Mode
         delete [] recovered.first;
         return recoverNoPadding;
     }
-
-    // unsigned char * DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[])
-    // {
-    //     unsigned char *out = new unsigned char[inLen];
-    //     unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
-    //     KeyExpansion(key, roundKeys);
-    //     for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
-    //     {
-    //         DecryptBlock(in + i, out + i, roundKeys);
-    //     }
-
-    //     delete[] roundKeys;
-        
-    //     return out;
-    // }
-
-    // bytestream EncryptECB(bytestream in, bytestream key)
-    // {
-    //     unsigned int outLen = 0;;
-    //     unsigned char *out = EncryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), outLen);
-    //     bytestream v = ArrayToVector(out, outLen);
-    //     delete []out;
-    //     return v;
-    // }
-
-    // bytestream DecryptECB(bytestream in, bytestream key)
-    // {
-    //     unsigned char *out = DecryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key));
-    //     bytestream v = ArrayToVector(out, (unsigned int)in.size());
-    //     delete []out;
-    //     return v;
-    // }
 }
 
 #endif

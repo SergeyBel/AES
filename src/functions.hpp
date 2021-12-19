@@ -6,31 +6,18 @@
 
 namespace Krypt
 {
-    void printHexArray (unsigned char a[], size_t n)
-    {
-        for (size_t i = 0; i < n; i++) {
-            printf("%02x ", a[i]);
-        }
-        std::cout << "\n";
-    }
-
-    void printHexVector (const std::vector<unsigned char>& a)
-    {
-        for (size_t i = 0; i < a.size(); i++) {
-            printf("%02x ", a[i]);
-        }
-    }
-
-    std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len)
-    {
-        std::vector<unsigned char> v(a, a + len * sizeof(unsigned char));
-        return v;
-    }
-
-    const unsigned char *VectorToArray(const std::vector<unsigned char>& a)
-    {
-        return a.data();
-    }
+    Bytes xtime(Bytes b);    // multiply on x
+    void SubWord(Bytes *a);
+    void RotWord(Bytes *a);
+    void XorWords(Bytes *a, Bytes *b, Bytes *c);
+    void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+    void Rcon(Bytes * a, int n);
+    void printHexArray (unsigned char a[], size_t n);
+    void printHexVector (const std::vector<unsigned char>& a);
+    std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len);
+    const unsigned char *VectorToArray(const std::vector<unsigned char>& a);
 }
+
+#include "functions.cpp"
 
 #endif

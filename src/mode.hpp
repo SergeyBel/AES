@@ -44,27 +44,27 @@ namespace Krypt::Mode
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
     };
 
-    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    // class CBC : public MODE
-    // {
-    //     public:
-    //         CBC(const Sequence& key);
-    //         Krypt::Bytes* encrypt() {}
-    //         Krypt::Bytes* decrypt() {}
-    // };
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    class CBC : public MODE<CIPHER_TYPE,PADDING_TYPE>
+    {
+        public:
+            CBC(const Sequence& key);
+            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
+            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+    };
 
-    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    // class CFB : public MODE
-    // {
-    //     public:
-    //         CFB(const Sequence& key);
-    //         Krypt::Bytes* encrypt() {}
-    //         Krypt::Bytes* decrypt() {}
-    // };
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+    {
+        public:
+            CFB(const Sequence& key);
+            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
+            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+    };
 }
 
-// #include "mode/cbc_mode.cpp"
-// #include "mode/cfb_mode.cpp"
+#include "mode/cbc_mode.cpp"
+#include "mode/cfb_mode.cpp"
 #include "mode/ecb_mode.cpp"
 
 #endif

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include "types.hpp"
+#include "functions.hpp"
 
 namespace Krypt::BlockCipher
 {
@@ -30,26 +31,25 @@ namespace Krypt::BlockCipher
             size_t Nr;
             Bytes *RoundedKeys;
 
+            void KeyExpansion(const Bytes* key);
+
             void SubBytes(unsigned char state[4][4]);
             void InvSubBytes(unsigned char state[4][4]);
 
             void ShiftRows(unsigned char state[4][4]);
             void InvShiftRows(unsigned char state[4][4]);
 
-            unsigned char xtime(unsigned char b);    // multiply on x
-
             void MixColumns(unsigned char state[4][4]);
             void InvMixColumns(unsigned char state[4][4]);
 
             void AddRoundKey(unsigned char state[4][4], unsigned char *key);
 
-            void SubWord(unsigned char *a);
-            void RotWord(unsigned char *a);
-            void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
-            void Rcon(unsigned char * a, int n);
-            void KeyExpansion(const Bytes* key);
-
-            void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+            // unsigned char xtime(unsigned char b);    // multiply on x
+            // void SubWord(unsigned char *a);
+            // void RotWord(unsigned char *a);
+            // void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
+            // void Rcon(unsigned char * a, int n);
+            // void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
         public:
 
