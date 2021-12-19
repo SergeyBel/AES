@@ -6,7 +6,7 @@ Forked From : https://github.com/SergeyBel/AES
 
 This fork was optimized and used by my file [encryption/decryption program](https://github.com/mrdcvlsc/bethela).
 
-**This is a portable software implementation, no Inline assembly, no SIMD intrinsics are used, it only relies on compiler optimizations(-O & -march) for better performance.** 
+**This is a portable software implementation, no Inline assembly, no SIMD intrinsics are used, it only relies on compiler optimizations(-O & -march) for better performance, expect this library to be slow if you compare the performance to optimized crypto libraries like OpenSSL, and Crypto++** 
 
  
 ![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
