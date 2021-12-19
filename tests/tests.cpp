@@ -6,9 +6,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../src/blockcipher.hpp"
-#include "../src/padding.hpp"
-#include "../src/mode.hpp"
+#include "../src/Krypt.hpp"
 
 using namespace std;
 

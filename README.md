@@ -1,76 +1,61 @@
-# AES
+# Krypt
 
 Forked From : https://github.com/SergeyBel/AES
 
 ### About this fork
 
-This fork was optimized and used by my file [encryption/decryption program](https://github.com/mrdcvlsc/bethela), the performance was not as fast as AES hardware instruction sets on supported hardwares but fast enough as a software implementation.
+This fork was optimized and used by my file [encryption/decryption program](https://github.com/mrdcvlsc/bethela).
 
-C++ AES(Advanced Encryption Standard) implementation  
+**This is a portable software implementation, no Inline assembly, no SIMD intrinsics are used, it only relies on compiler optimizations(-O & -march) for better performance.** 
+
  
 ![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
 
 
-**This class is very simple to use:**
+
+**sample program:**
 ```c++
-...
+#include <iostream>
+#include "src/Krypt.hpp"
 
+using namespace Krypt;
 
-unsigned char plain[] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff }; //plaintext example
-unsigned char key[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f }; //key example
-unsigned int plainLen = 16 * sizeof(unsigned char);  //bytes in plaintext
-unsigned int outLen = 0;  // out param - bytes in сiphertext
+int main()
+{
+    unsigned char plain[] = {
+        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+        0x88, 0x99, 0xaa, 0xbb
+    };
 
-AES aes(128);  //128 - key length, can be 128, 192 or 256
-c = aes.EncryptECB(plain, plainLen, key, outLen);
-//now variable c contains outLen bytes - ciphertext
-...
+    // if you want to AES192 or AES256, just increase the size of the key array
+    // the AES class will automatically detect it
+    unsigned char aes128key[] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+    };
+
+    Mode::ECB<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
+
+    // `Krypt::Bytes` is just a typedef for `unsigned char`
+    std::pair<Bytes*,size_t> cipher  = krypt.encrypt(plain,sizeof(plain));
+    std::pair<Bytes*,size_t> recover = krypt.decrypt(cipher.first,cipher.second);
+
+    std::cout << "Plain txt : ";
+    printHexArray(plain,sizeof(plain));
+    std::cout << "Encrypted : ";
+    printHexArray(cipher.first,cipher.second);
+    std::cout << "Decrypted : ";
+    printHexArray(recover.first,recover.second);
+
+    delete [] cipher.first;
+    delete [] recover.first;    
+}
 ```
-Or for vectors:
-```c++
-...
 
+**Support**
 
-vector<unsigned char> plain = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff }; //plaintext example
-vector<unsigned char> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f }; //key example
+Block Cipher: AES
 
-AES aes(128);
-c = aes.EncryptECB(plain, key);
-//now vector c contains ciphertext
-...
-```
-ECB, CBC, CFB modes are supported.
+Encryption modes: ECB, CBC, CFB
 
-
-You can read more about AES here:
-
-https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-
-http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
-
-<!--
-**Development:**
-1. `git clone https://github.com/SergeyBel/AES.git`
-1. `docker-compose build`
-1. `docker-compose up -d`
-1. use make commands
-
-There are four executables in `bin` folder:  
-* `test` - run tests  
-* `debug` - version for debugging (main code will be taken from dev/main.cpp)  
-* `profile` - version for profiling with gprof (main code will be taken from dev/main.cpp)  
-* `release` - version with optimization (main code will be taken from dev/main.cpp)  
-
-
-Build commands:  
-* `make build_all` - build all targets
-* `make build_test` - build `test` target
-* `make build_debug` - build `debug` target
-* `make build_profile` - build `profile` target
-* `make build_release` - build `release` target
-* `make test` - run tests
-* `make debug` - run debug version
-* `make profile` - run profile version
-* `make release` - run `release` version
-* `make clean` - clean `bin` directory
--->
+Padding: ANSI X9.23, PKCS#5 and PKCS#7, ISO/IEC 7816-4, Zero padding

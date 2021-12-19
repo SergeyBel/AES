@@ -20,8 +20,6 @@ namespace Krypt::Mode
         Bytes* tempIV = new Bytes[this->Encryption->BLOCK_SIZE];
         Bytes* cipher = new Bytes[padded.second];
 
-        std::cout << this->Encryption->BLOCK_SIZE << "\n";
-
         memcpy(tempIV,this->Encryption->IV,this->Encryption->BLOCK_SIZE);
 
         for(size_t i=0; i<padded.second; i+=this->Encryption->BLOCK_SIZE)

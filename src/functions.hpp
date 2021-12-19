@@ -6,11 +6,12 @@
 
 namespace Krypt
 {
-    Bytes xtime(Bytes b);    // multiply on x
-    void SubWord(Bytes *a);
-    void RotWord(Bytes *a);
-    void XorWords(Bytes *a, Bytes *b, Bytes *c);
-    void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+    inline Bytes xtime(Bytes b);    // multiply on x
+    inline void SubWord(Bytes *a);
+    inline void RotWord(Bytes *a);
+    inline void XorWords(Bytes *a, Bytes *b, Bytes *c);
+    inline void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
+    
     void Rcon(Bytes * a, int n);
     void printHexArray (unsigned char a[], size_t n);
     void printHexVector (const std::vector<unsigned char>& a);

@@ -34,20 +34,18 @@ namespace Krypt::BlockCipher
 
             void KeyExpansion(const Bytes* key);
 
-            void SubBytes(unsigned char state[4][4]);
-            void InvSubBytes(unsigned char state[4][4]);
+            inline void SubBytes(unsigned char state[4][4]);
+            inline void InvSubBytes(unsigned char state[4][4]);
 
-            void ShiftRows(unsigned char state[4][4]);
-            void InvShiftRows(unsigned char state[4][4]);
+            inline void ShiftRows(unsigned char state[4][4]);
+            inline void InvShiftRows(unsigned char state[4][4]);
 
-            void MixColumns(unsigned char state[4][4]);
-            void InvMixColumns(unsigned char state[4][4]);
+            inline void MixColumns(unsigned char state[4][4]);
+            inline void InvMixColumns(unsigned char state[4][4]);
 
             void AddRoundKey(unsigned char state[4][4], unsigned char *key);
 
         public:
-
-            const Bytes* getIV() { return IV; }
 
             /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
             void EncryptBlock(Bytes *src, Bytes *dest) override;
