@@ -14,10 +14,7 @@ namespace Krypt::Padding
         public:
         InvalidPadding(const char* info) : msg(info) {}
         const char* msg;
-        const char* what() const throw ()
-        {
-            return msg;
-        }
+        const char* what() const throw ();
     };
 
     class InvalidPaddedLength : public std::exception
@@ -25,10 +22,7 @@ namespace Krypt::Padding
         public:
         InvalidPaddedLength(const char* paddingSchemName) : msg(paddingSchemName) {}
         const char* msg;
-        const char* what() const throw ()
-        {
-            return msg;
-        }
+        const char* what() const throw ();
     };
 
     /// default & base class for padding - pad the src with zeros

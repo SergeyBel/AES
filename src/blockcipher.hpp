@@ -13,6 +13,7 @@ namespace Krypt::BlockCipher
         public:
             //  BLOCK_SIZE IN BYTES
             size_t BLOCK_SIZE;
+            Bytes *IV;
 
             BASE_BLOCKCIPHER(size_t blockSize) : BLOCK_SIZE(blockSize) {}
 
@@ -46,6 +47,8 @@ namespace Krypt::BlockCipher
 
         public:
 
+            const Bytes* getIV() { return IV; }
+
             /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
             void EncryptBlock(Bytes *src, Bytes *dest) override;
 
@@ -55,6 +58,7 @@ namespace Krypt::BlockCipher
             /// initialize the round key from a key
             void setKey(const Bytes* key, size_t keyLen);
             AES(const Bytes* ByteArray, size_t keyLen);
+            AES(const Bytes* ByteArray, size_t keyLen, const Bytes* IV);
             ~AES();
     };
 }

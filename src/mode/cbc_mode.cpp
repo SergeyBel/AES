@@ -5,46 +5,58 @@
 
 namespace Krypt::Mode
 {
-    // unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv, unsigned int &outLen)
-    // {
-    //     outLen = GetPaddingLength(inLen);
-    //     unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
-    //     unsigned char *out = new unsigned char[outLen];
-    //     unsigned char block[AES_BLOCK_LEN];
-    //     unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
-    //     KeyExpansion(key, roundKeys);
-    //     memcpy(block, iv, AES_BLOCK_LEN);
-    //     for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
-    //     {
-    //         XorBlocks(block, alignIn + i, block, AES_BLOCK_LEN);
-    //         EncryptBlock(block, out + i, roundKeys);
-    //         memcpy(block, out + i, AES_BLOCK_LEN);
-    //     }
-        
-    //     delete[] alignIn;
-    //     delete[] roundKeys;
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    CBC<CIPHER_TYPE,PADDING_TYPE>::CBC(const Bytes* key, size_t keyLen, const Bytes* IV)
+        : MODE<CIPHER_TYPE,PADDING_TYPE>()
+    {
+        this->Encryption = new CIPHER_TYPE(key,keyLen,IV);
+        this->PaddingScheme = new PADDING_TYPE();
+    }
 
-    //     return out;
-    // }
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    std::pair<Bytes*,size_t> CBC<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen)
+    {
+        std::pair<Bytes*,size_t> padded = this->PaddingScheme->AddPadding(plain,plainLen,this->Encryption->BLOCK_SIZE);
+        Bytes* tempIV = new Bytes[this->Encryption->BLOCK_SIZE];
+        Bytes* cipher = new Bytes[padded.second];
 
-    // unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned char * iv)
-    // {
-    //     unsigned char *out = new unsigned char[inLen];
-    //     unsigned char block[AES_BLOCK_LEN];
-    //     unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
-    //     KeyExpansion(key, roundKeys);
-    //     memcpy(block, iv, AES_BLOCK_LEN);
-    //     for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
-    //     {
-    //         DecryptBlock(in + i, out + i, roundKeys);
-    //         XorBlocks(block, out + i, out + i, AES_BLOCK_LEN);
-    //         memcpy(block, in + i, AES_BLOCK_LEN);
-    //     }
-        
-    //     delete[] roundKeys;
+        std::cout << this->Encryption->BLOCK_SIZE << "\n";
 
-    //     return out;
-    // }
+        memcpy(tempIV,this->Encryption->IV,this->Encryption->BLOCK_SIZE);
+
+        for(size_t i=0; i<padded.second; i+=this->Encryption->BLOCK_SIZE)
+        {
+            XorBlocks(tempIV,padded.first+i,tempIV,this->Encryption->BLOCK_SIZE);
+            this->Encryption->EncryptBlock(tempIV,cipher+i);
+            memcpy(tempIV, cipher+i,this->Encryption->BLOCK_SIZE);
+        }
+
+        delete [] padded.first;
+        delete [] tempIV;
+        return {cipher,padded.second};
+    }
+
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    std::pair<Bytes*,size_t> CBC<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen)
+    {
+        Bytes* recover = new Bytes[cipherLen];
+        Bytes* tempIV  = new Bytes[this->Encryption->BLOCK_SIZE];
+        memcpy(tempIV,this->Encryption->IV,this->Encryption->BLOCK_SIZE);
+
+        for(size_t i=0; i<cipherLen; i+=this->Encryption->BLOCK_SIZE)
+        {
+            this->Encryption->DecryptBlock(cipher+i, recover+i);
+            XorBlocks(tempIV, recover+i,recover+i,this->Encryption->BLOCK_SIZE);
+            memcpy(tempIV, cipher+i,this->Encryption->BLOCK_SIZE);
+        }
+
+        std::pair<Bytes*,size_t> recoverNoPadding = this->PaddingScheme->RemovePadding(recover,cipherLen,this->Encryption->BLOCK_SIZE);
+
+        delete [] tempIV;
+        delete [] recover;
+
+        return {recoverNoPadding.first,recoverNoPadding.second};
+    }
 }
 
 #endif

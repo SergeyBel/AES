@@ -12,18 +12,16 @@ namespace Krypt::Mode
     class MODE
     {
         public:
-            size_t BLOCK_SIZE;
             BlockCipher::BASE_BLOCKCIPHER* Encryption;
             Padding::ZeroNulls* PaddingScheme;
 
             MODE()
             {
-                BLOCK_SIZE = 0;
                 Encryption = NULL;
                 PaddingScheme = NULL;
             }
 
-            MODE(size_t blockSize) : BLOCK_SIZE(blockSize), Encryption(new CIPHER_TYPE), PaddingScheme(new PADDING_TYPE) {}
+            // MODE(size_t blockSize) : Encryption(new CIPHER_TYPE), PaddingScheme(new PADDING_TYPE) {}
 
             virtual std::pair<Bytes*,size_t> encrypt(Bytes*, size_t) { return {NULL,0}; }
             virtual std::pair<Bytes*,size_t> decrypt(Bytes*, size_t) { return {NULL,0}; }
@@ -39,7 +37,7 @@ namespace Krypt::Mode
     class ECB : public MODE<CIPHER_TYPE,PADDING_TYPE>
     {
         public:
-            ECB(const Sequence& key);
+            ECB(const Bytes* key, size_t keyLen);
             std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
     };
@@ -48,19 +46,19 @@ namespace Krypt::Mode
     class CBC : public MODE<CIPHER_TYPE,PADDING_TYPE>
     {
         public:
-            CBC(const Sequence& key);
+            CBC(const Bytes* key, size_t keyLen, const Bytes* IV);
             std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
     };
 
-    template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
-    {
-        public:
-            CFB(const Sequence& key);
-            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
-            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
-    };
+    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    // class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+    // {
+    //     public:
+    //         CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
+    //         std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
+    //         std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+    // };
 }
 
 #include "mode/cbc_mode.cpp"

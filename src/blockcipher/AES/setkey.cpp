@@ -32,11 +32,20 @@ namespace Krypt::BlockCipher
     AES::AES(const Bytes* ByteArray, size_t keyLen) : BASE_BLOCKCIPHER(16)
     {
         setKey(ByteArray,keyLen);
+        this->IV = NULL;
+    }
+
+    AES::AES(const Bytes* ByteArray, size_t keyLen, const Bytes* IV) : BASE_BLOCKCIPHER(16)
+    {
+        setKey(ByteArray,keyLen);
+        this->IV = new Bytes[this->BLOCK_SIZE];
+        memcpy(this->IV,IV,this->BLOCK_SIZE);
     }
 
     AES::~AES()
     {
         if(RoundedKeys!=NULL) delete [] RoundedKeys;
+        if(IV!=NULL) delete [] IV;
     }
 }
 
