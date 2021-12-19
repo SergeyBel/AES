@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: compile tests
-      run: make compile_test
+      run: mkdir bin && make compile_test
       
     - name: run tests
       run: make run_test
