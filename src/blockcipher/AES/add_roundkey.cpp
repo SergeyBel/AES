@@ -3,7 +3,7 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt
+namespace Krypt::BlockCipher
 {
     void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key)
     {

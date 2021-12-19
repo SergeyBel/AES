@@ -4,9 +4,9 @@
 #include <iostream>
 #include "../../blockcipher.hpp"
 
-namespace Krypt
+namespace Krypt::BlockCipher
 {
-    void AES::setKey(Bytes* ByteArray, size_t keyLen)
+    void AES::setKey(const Bytes* ByteArray, size_t keyLen)
     {
         switch (keyLen)
         {
@@ -29,7 +29,7 @@ namespace Krypt
         KeyExpansion(ByteArray);
     }
 
-    AES::AES(Bytes* ByteArray, size_t keyLen)
+    AES::AES(const Bytes* ByteArray, size_t keyLen) : BASE_BLOCKCIPHER(16)
     {
         setKey(ByteArray,keyLen);
     }

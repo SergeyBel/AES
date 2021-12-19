@@ -3,17 +3,85 @@
 
 #include <iostream>
 #include <vector>
+#include <cstring>
+
+#define KRYPT_PRINT_HEX(PRINT_HEX_PARAM) \
+std::cout.setf(std::ios::showbase); \
+std::cout.setf(std::ios::hex, std::ios::basefield); \
+std::cout << PRINT_HEX_PARAM << "\n"
 
 namespace Krypt
 {
-    /// Block Size in Bytes
-    const static int AES_BLOCKSIZE = 16;
-    const static int Nb = 4;
+    // /// Block Size in Bytes
+    // const static int AES_BLOCKSIZE = 16;
+    // const static int Nb = 4;
 
     typedef unsigned char Bytes;
-    typedef std::vector<Bytes> ByteStream;
 
-    static const unsigned char sbox[256] = {
+    class Sequence
+    {
+        Bytes* data;
+        size_t length;
+
+        public:
+
+        Sequence(size_t n) : data(new Bytes[n]), length(n) {}
+
+        Sequence(Bytes* src, size_t n) : data(new Bytes[n]), length(n)
+        {
+            memcpy(data,src,n);
+        }
+
+        const Bytes* data_c() const { return data; }
+
+        size_t size() const { return length; }
+
+        std::string to_string() const
+        {
+            return std::string(reinterpret_cast<char*>(data),length);
+        }
+
+        Bytes& operator[](size_t i)
+        {
+            #ifndef DISABLE_SEQUENCE_INDEXING
+            if(i>length) throw std::overflow_error("Krypt::Sequence [] index overflow");
+            if(i<length) throw std::overflow_error("Krypt::Sequence [] index underflow");
+            #endif
+
+            return data[i];
+        }
+
+        const Bytes& operator[](size_t i) const
+        {
+            #ifndef DISABLE_SEQUENCE_INDEXING
+            if(i>length) throw std::overflow_error("Krypt::Sequence [] index overflow");
+            if(i<length) throw std::overflow_error("Krypt::Sequence [] index underflow");
+            #endif
+            
+            return data[i];   
+        }
+
+        ~Sequence()
+        {
+            delete [] data;
+        }
+    };
+
+    std::ostream& operator<<(std::ostream& outputStream, const Sequence& instance)
+    {
+        for(size_t i=0; i<instance.size(); ++i)
+                outputStream << instance[i];
+            return outputStream;
+    }
+
+    std::istream& operator>>(std::istream& inputStream, Sequence& instance)
+    {
+        for(size_t i=0; i<instance.size(); ++i)
+            inputStream >> instance[i];
+        return inputStream;
+    }
+
+    static const Bytes sbox[256] = {
         0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76,
         0xca ,0x82 ,0xc9 ,0x7d ,0xfa ,0x59 ,0x47 ,0xf0 ,0xad ,0xd4 ,0xa2 ,0xaf ,0x9c ,0xa4 ,0x72 ,0xc0,
         0xb7 ,0xfd ,0x93 ,0x26 ,0x36 ,0x3f ,0xf7 ,0xcc ,0x34 ,0xa5 ,0xe5 ,0xf1 ,0x71 ,0xd8 ,0x31 ,0x15,
@@ -32,7 +100,7 @@ namespace Krypt
         0x8c ,0xa1 ,0x89 ,0x0d ,0xbf ,0xe6 ,0x42 ,0x68 ,0x41 ,0x99 ,0x2d ,0x0f ,0xb0 ,0x54 ,0xbb ,0x16
     };
 
-    const unsigned char inv_sbox[256] = {
+    const Bytes inv_sbox[256] = {
         0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
         0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
         0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
@@ -52,7 +120,7 @@ namespace Krypt
     };
 
     /// Galois Multiplication lookup tables
-    static const unsigned char GF_MUL_TABLE[15][256] = {
+    static const Bytes GF_MUL_TABLE[15][256] = {
 
         {},{},
 
@@ -184,7 +252,7 @@ namespace Krypt
     };
 
     /// circulant MDS matrix
-    static const unsigned char CMDS[4][4] = {
+    static const Bytes CMDS[4][4] = {
         {2,3,1,1},
         {1,2,3,1},
         {1,1,2,3},
@@ -192,7 +260,7 @@ namespace Krypt
     };
 
     /// Inverse circulant MDS matrix
-    static const unsigned char INV_CMDS[4][4] = {
+    static const Bytes INV_CMDS[4][4] = {
         {14,11,13,9},
         {9,14,11,13},
         {13,9,14,11},

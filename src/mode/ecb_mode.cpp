@@ -1,84 +1,84 @@
 #ifndef ECP_MODE_CPP
 #define ECP_MODE_CPP
 
-#include "AES.h"
+#include "../functions.hpp"
+#include "../mode.hpp"
 
-namespace Cipher
+namespace Krypt::Mode
 {
-    unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[], unsigned int &outLen)
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    ECB<CIPHER_TYPE,PADDING_TYPE>::ECB(const Sequence& key)
+        : MODE<CIPHER_TYPE,PADDING_TYPE>()
     {
-        outLen = GetPaddingLength(inLen);
-        unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
-        unsigned char *out = new unsigned char[outLen];
-        unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
-        KeyExpansion(key, roundKeys);
-        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
-        {
-            EncryptBlock(alignIn + i, out + i, roundKeys);
-        }
-        
-        delete[] alignIn;
-        delete[] roundKeys;
-        
-        return out;
+        this->BLOCK_SIZE = 16;
+        this->Encryption = new CIPHER_TYPE(key.data_c(),key.size());
+        this->PaddingScheme = new PADDING_TYPE();
     }
 
-    unsigned char * AES::EncryptECB(unsigned char in[], unsigned int inLen, unsigned int &outLen)
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    std::pair<Bytes*,size_t> ECB<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen)
     {
-        outLen = GetPaddingLength(inLen);
-        unsigned char *alignIn  = PaddingNulls(in, inLen, outLen);
-        unsigned char *out = new unsigned char[outLen];
-        for (unsigned int i = 0; i < outLen; i+= AES_BLOCK_LEN)
-        {
-            EncryptBlock(alignIn + i, out + i, RoundedKeys);
-        }
-        
-        delete[] alignIn;
-        
-        return out;
-    }
+        std::pair<Bytes*,size_t> padded = this->PaddingScheme->AddPadding(plain,plainLen,this->BLOCK_SIZE);
 
-    unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[])
-    {
-        unsigned char *out = new unsigned char[inLen];
-        unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
-        KeyExpansion(key, roundKeys);
-        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
+        Bytes* cipher = new Bytes[padded.second];
+        for(size_t i=0; i<padded.second; i+=this->BLOCK_SIZE)
         {
-            DecryptBlock(in + i, out + i, roundKeys);
+            this->Encryption->EncryptBlock(padded.first+i,cipher+i);
         }
 
-        delete[] roundKeys;
-        
-        return out;
+        delete [] padded.first;
+        return {cipher,padded.second};
     }
 
-    unsigned char * AES::DecryptECB(unsigned char in[], unsigned int inLen)
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    std::pair<Bytes*,size_t> ECB<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen)
     {
-        unsigned char *out = new unsigned char[inLen];
-        for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
+        std::pair<Bytes*,size_t> recovered;
+        recovered.first = new Bytes[cipherLen];
+        recovered.second = cipherLen;
+
+        for(size_t i=0; i<cipherLen; i+=this->BLOCK_SIZE)
         {
-            DecryptBlock(in + i, out + i, RoundedKeys);
-        }  
-        return out;
+            this->Encryption->DecryptBlock(cipher+i,recovered.first+i);
+        }
+
+        std::pair<Bytes*,size_t> recoverNoPadding = this->PaddingScheme->RemovePadding(recovered.first,recovered.second,this->BLOCK_SIZE);
+        
+        delete [] recovered.first;
+        return recoverNoPadding;
     }
 
-    bytestream AES::EncryptECB(bytestream in, bytestream key)
-    {
-        unsigned int outLen = 0;;
-        unsigned char *out = EncryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), outLen);
-        bytestream v = ArrayToVector(out, outLen);
-        delete []out;
-        return v;
-    }
+    // unsigned char * DecryptECB(unsigned char in[], unsigned int inLen, unsigned  char key[])
+    // {
+    //     unsigned char *out = new unsigned char[inLen];
+    //     unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
+    //     KeyExpansion(key, roundKeys);
+    //     for (unsigned int i = 0; i < inLen; i+= AES_BLOCK_LEN)
+    //     {
+    //         DecryptBlock(in + i, out + i, roundKeys);
+    //     }
 
-    bytestream AES::DecryptECB(bytestream in, bytestream key)
-    {
-        unsigned char *out = DecryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key));
-        bytestream v = ArrayToVector(out, (unsigned int)in.size());
-        delete []out;
-        return v;
-    }
+    //     delete[] roundKeys;
+        
+    //     return out;
+    // }
+
+    // bytestream EncryptECB(bytestream in, bytestream key)
+    // {
+    //     unsigned int outLen = 0;;
+    //     unsigned char *out = EncryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key), outLen);
+    //     bytestream v = ArrayToVector(out, outLen);
+    //     delete []out;
+    //     return v;
+    // }
+
+    // bytestream DecryptECB(bytestream in, bytestream key)
+    // {
+    //     unsigned char *out = DecryptECB(VectorToArray(in), (unsigned int)in.size(), VectorToArray(key));
+    //     bytestream v = ArrayToVector(out, (unsigned int)in.size());
+    //     delete []out;
+    //     return v;
+    // }
 }
 
 #endif

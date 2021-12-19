@@ -1,43 +1,70 @@
-#ifndef MODE
-#define MDOE
+#ifndef KRYPT_MODE_OF_ENCRYPTION_HPP
+#define KRYPT_MODE_OF_ENCRYPTION_HPP
 
 #include <iostream>
 #include "types.hpp"
+#include "blockcipher.hpp"
+#include "padding.hpp"
 
-template<typename BLOCK_CIPHER, typename PADDING>
-class MODE
+namespace Krypt::Mode
 {
-    public:
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    class MODE
+    {
+        public:
+            size_t BLOCK_SIZE;
+            BlockCipher::BASE_BLOCKCIPHER* Encryption;
+            Padding::ZeroNulls* PaddingScheme;
 
-        BLOCK_CIPHER* BlockCipher;
-        PADDING* PaddingScheme;
+            MODE()
+            {
+                BLOCK_SIZE = 0;
+                Encryption = NULL;
+                PaddingScheme = NULL;
+            }
 
-        virtual Krypt::Bytes* encrypt() {};
-        virtual Krypt::Bytes* decrypt() {};
-};
+            MODE(size_t blockSize) : BLOCK_SIZE(blockSize), Encryption(new CIPHER_TYPE), PaddingScheme(new PADDING_TYPE) {}
 
-template<typename BLOCK_CIPHER, typename PADDING>
-class ECB : public MODE
-{
-    public:
-        virtual Krypt::Bytes* encrypt() {};
-        virtual Krypt::Bytes* decrypt() {};
-};
+            virtual std::pair<Bytes*,size_t> encrypt(Bytes*, size_t) { return {NULL,0}; }
+            virtual std::pair<Bytes*,size_t> decrypt(Bytes*, size_t) { return {NULL,0}; }
 
-template<typename BLOCK_CIPHER, typename PADDING>
-class CBC : public MODE
-{
-    public:
-        virtual Krypt::Bytes* encrypt() {};
-        virtual Krypt::Bytes* decrypt() {};
-};
+            ~MODE()
+            {
+                delete Encryption;
+                delete PaddingScheme;
+            }
+    };
 
-template<typename BLOCK_CIPHER, typename PADDING>
-class CFB : public MODE
-{
-    public:
-        virtual Krypt::Bytes* encrypt() {};
-        virtual Krypt::Bytes* decrypt() {};
-};
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    class ECB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+    {
+        public:
+            ECB(const Sequence& key);
+            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
+            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+    };
+
+    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    // class CBC : public MODE
+    // {
+    //     public:
+    //         CBC(const Sequence& key);
+    //         Krypt::Bytes* encrypt() {}
+    //         Krypt::Bytes* decrypt() {}
+    // };
+
+    // template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    // class CFB : public MODE
+    // {
+    //     public:
+    //         CFB(const Sequence& key);
+    //         Krypt::Bytes* encrypt() {}
+    //         Krypt::Bytes* decrypt() {}
+    // };
+}
+
+// #include "mode/cbc_mode.cpp"
+// #include "mode/cfb_mode.cpp"
+#include "mode/ecb_mode.cpp"
 
 #endif

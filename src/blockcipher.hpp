@@ -5,27 +5,30 @@
 #include <cstring>
 #include "types.hpp"
 
-namespace Krypt
+namespace Krypt::BlockCipher
 {
-    class BLOCK_CIPHER
+    class BASE_BLOCKCIPHER
     {
         public:
             //  BLOCK_SIZE IN BYTES
             size_t BLOCK_SIZE;
 
-            virtual void EncryptBlock() {};
-            virtual void DecryptBlock() {};
+            BASE_BLOCKCIPHER(size_t blockSize) : BLOCK_SIZE(blockSize) {}
+
+            virtual void EncryptBlock(Bytes*, Bytes*) {};
+            virtual void DecryptBlock(Bytes*, Bytes*) {};
+            virtual ~BASE_BLOCKCIPHER() = default;
     };
 
     /// @def AES BLOCK CIPHER, ENCRYPTION - DECRYPTION OF 16 BYTES BLOCK
-    class AES : BLOCK_CIPHER
+    class AES : public BASE_BLOCKCIPHER
     {
         private:
             
+            const static size_t Nb = 4;
             size_t Nk;
             size_t Nr;
             Bytes *RoundedKeys;
-            bool isRoundKeySet = false;
 
             void SubBytes(unsigned char state[4][4]);
             void InvSubBytes(unsigned char state[4][4]);
@@ -44,21 +47,21 @@ namespace Krypt
             void RotWord(unsigned char *a);
             void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
             void Rcon(unsigned char * a, int n);
-            void KeyExpansion(unsigned char *key);
+            void KeyExpansion(const Bytes* key);
 
             void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
         public:
 
             /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
-            void EncryptBlock(Bytes *in, Bytes *out);
+            void EncryptBlock(Bytes *src, Bytes *dest) override;
 
             /// decrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
-            void DecryptBlock(Bytes *in, Bytes *out);
+            void DecryptBlock(Bytes *src, Bytes *dest) override;
 
             /// initialize the round key from a key
-            void setKey(Bytes* key, size_t keyLen);
-            AES(Bytes* ByteArray, size_t keyLen);
+            void setKey(const Bytes* key, size_t keyLen);
+            AES(const Bytes* ByteArray, size_t keyLen);
             ~AES();
     };
 }

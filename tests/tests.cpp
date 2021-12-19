@@ -309,8 +309,6 @@ TEST(CBC, TwoBlocksDecryptVector)
   ASSERT_EQ(out, right);
 }
 
-
-
 TEST(CFB, EncryptDecrypt)
 {
   AES aes(256);

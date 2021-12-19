@@ -3,14 +3,14 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt
+namespace Krypt::BlockCipher
 {
-    unsigned char AES::xtime(unsigned char b)    // multiply on x
+    Bytes AES::xtime(Bytes b)    // multiply on x
     {
         return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
     }
 
-    void AES::SubWord(unsigned char *a)
+    void AES::SubWord(Bytes *a)
     {
         int i;
         for (i = 0; i < 4; i++)
@@ -19,16 +19,16 @@ namespace Krypt
         }
     }
 
-    void AES::RotWord(unsigned char *a)
+    void AES::RotWord(Bytes *a)
     {
-        unsigned char c = a[0];
+        Bytes c = a[0];
         a[0] = a[1];
         a[1] = a[2];
         a[2] = a[3];
         a[3] = c;
     }
 
-    void AES::XorWords(unsigned char *a, unsigned char *b, unsigned char *c)
+    void AES::XorWords(Bytes *a, Bytes *b, Bytes *c)
     {
         int i;
         for (i = 0; i < 4; i++)
@@ -37,10 +37,10 @@ namespace Krypt
         }
     }
 
-    void AES::Rcon(unsigned char * a, int n)
+    void AES::Rcon(Bytes * a, int n)
     {
         int i;
-        unsigned char c = 1;
+        Bytes c = 1;
         for (i = 0; i < n - 1; i++)
         {
             c = xtime(c);
@@ -50,11 +50,11 @@ namespace Krypt
         a[1] = a[2] = a[3] = 0;
     }
 
-    void AES::KeyExpansion(unsigned char *key)
+    void AES::KeyExpansion(const Bytes* key)
     {
-        unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-        unsigned char *temp = new unsigned char[4];
-        unsigned char *rcon = new unsigned char[4];
+        Bytes *w = new Bytes[4 * Nb * (Nr + 1)];
+        Bytes *temp = new Bytes[4];
+        Bytes *rcon = new Bytes[4];
 
         int i = 0;
         while (i < 4 * Nk)
@@ -96,11 +96,11 @@ namespace Krypt
         RoundedKeys = w;
     }
 
-    // void AES::KeyExpansion(unsigned char key[])
+    // void AES::KeyExpansion(Bytes key[])
     // {
-    //     unsigned char *w = new unsigned char[4 * Nb * (Nr + 1)];
-    //     unsigned char *temp = new unsigned char[4];
-    //     unsigned char *rcon = new unsigned char[4];
+    //     Bytes *w = new Bytes[4 * Nb * (Nr + 1)];
+    //     Bytes *temp = new Bytes[4];
+    //     Bytes *rcon = new Bytes[4];
 
     //     int i = 0;
     //     while (i < 4 * Nk)

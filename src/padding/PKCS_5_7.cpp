@@ -12,29 +12,27 @@
 #include <iostream>
 #include "../padding.hpp"
 
-namespace Padding
+namespace Krypt::Padding
 {
-    size_t PKCS_5_7::AddPadding(Krypt::Bytes*& src, size_t len, size_t BLOCKSIZE)
+    std::pair<Bytes*,size_t>  PKCS_5_7::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
     {
         size_t paddings = BLOCKSIZE-(len%BLOCKSIZE);
         size_t paddedLen = paddings+len;
-        Krypt::Bytes* paddedBlock = new Krypt::Bytes[paddedLen];
+        Bytes* paddedBlock = new Bytes[paddedLen];
 
         memcpy(paddedBlock, src, len);
-        memset(paddedBlock+len, static_cast<Krypt::Bytes>(paddings), paddings);
-        delete[] src;
+        memset(paddedBlock+len, static_cast<Bytes>(paddings), paddings);
 
-        src = paddedBlock;
-        return paddedLen;
+        return {paddedBlock,paddedLen};
     }
 
-    size_t PKCS_5_7::RemovePadding(Krypt::Bytes*& src, size_t len, size_t BLOCKSIZE)
+    std::pair<Bytes*,size_t>  PKCS_5_7::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
     {
         #ifndef PADDING_CHECK_DISABLE
         if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
         {
             std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
-            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+            throw InvalidPaddedLength("PKCS_5_7: src's `len` indicates that it was not padded or is corrupted");
         }
         #endif
 
@@ -42,7 +40,7 @@ namespace Padding
         size_t noPaddingLength = len-paddings;
 
         #ifndef PADDING_CHECK_DISABLE
-        Krypt::Bytes checkchar = static_cast<Krypt::Bytes>(paddings);
+        Bytes checkchar = static_cast<Bytes>(paddings);
         for(size_t i=1; i<paddings; ++i)
         {
             if(src[len-1-i]!=checkchar)
@@ -50,35 +48,10 @@ namespace Padding
         }
         #endif
 
-        Krypt::Bytes* NoPadding = new Krypt::Bytes[noPaddingLength];
+        Bytes* NoPadding = new Bytes[noPaddingLength];
         memcpy(NoPadding,src,noPaddingLength);
-        delete [] src;
-        src = NoPadding;
         
-        return noPaddingLength;
-    }
-
-    size_t PKCS_5_7::GetNoPaddingLength(const Krypt::Bytes* src, size_t len, size_t BLOCKSIZE)
-    {
-        #ifndef PADDING_CHECK_DISABLE
-        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
-        {
-            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
-            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
-        }
-        #endif
-
-        #ifndef PADDING_CHECK_DISABLE
-        size_t paddings = src[len-1];
-        Krypt::Bytes checkchar = static_cast<Krypt::Bytes>(paddings);
-        for(size_t i=1; i<paddings; ++i)
-        {
-            if(src[len-1-i]!=checkchar)
-                throw InvalidPadding("PKCS_5_7: does not match the padding scheme used in `src`");
-        }
-        #endif
-
-        return len-src[len-1];
+        return {NoPadding,noPaddingLength};
     }
 }
 
