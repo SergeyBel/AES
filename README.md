@@ -8,14 +8,17 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 **This is a portable software implementation, no Inline assembly, no SIMD intrinsics, so performance won't be as fast as optimized libraries like OpenSSL or Crypto++, it only relies on compiler optimizations for better performance.**
 
-***To get the peak performance of this portable library compile it with the flags ```-D PADDING_CHECK_DISABLE -O3 -march=native```***
- 
 ![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
 
+-----------
 
+**Compilation Note:** This is a header only library, you only need to include the ```"Krypt.hpp"```, no need to compile the library first, and there's no need to add/link the ```.cpp``` files of the library to your compilation flag, see the example below.
+
+***To get the peak performance of this portable library compile it with the flags ```-D PADDING_CHECK_DISABLE -O3 -march=native```***
 
 **sample program:**
 ```c++
+/*    sample.cpp    */
 #include <iostream>
 #include "src/Krypt.hpp"
 
@@ -48,6 +51,8 @@ int main()
     delete [] recover.first;    
 }
 ```
+
+**compile with** ```g++ sample.cpp -D PADDING_CHECK_DISABLE -o sample.exe -O3 -march=native```
 
 -------------
 
