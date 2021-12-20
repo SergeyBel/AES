@@ -42,13 +42,13 @@ int main()
     Mode::ECB<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
 
     // `Krypt::Bytes` is just a typedef for `unsigned char`
-    std::pair<Bytes*,size_t> cipher  = krypt.encrypt(plain,sizeof(plain));
-    std::pair<Bytes*,size_t> recover = krypt.decrypt(cipher.first,cipher.second);
+    ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
+    ByteArray recover = krypt.decrypt(cipher.first,cipher.second);
     
     // the pair.first will contain the output, and pair.second will contain the length of the output
 
     delete [] cipher.first;
-    delete [] recover.first;    
+    delete [] recover.first;
 }
 ```
 
@@ -58,10 +58,20 @@ int main()
 
 <br>
 
-**Inside the ```Krypt``` namespace**
+**```Krypt``` namespace contains the following :**
 
-| sub namespace | classes |
+| sub namespace | namespace classes |
 | --- | --- |
 | ```BlockCipher``` | ```AES``` |
 | ```Padding``` | ```ZeroNulls```, ```ANSI_X9_23```, ```ISO_IEC_7816_4```, ```PKCS_5_7``` |
 | ```Mode``` | ```ECB```, ```CBC```, ```CFB``` |
+
+<br>
+
+**The ```ByteArray``` class** is used to hold the output of ```encrypt()/decrypt()``` methods of the ```Mode``` classes, and the output of ```AddPadding()/RemovePadding()``` methods of the ```Padding``` classes... ```ByteArray``` methods are listed below :
+- ```length()``` - returns the size of the byte array
+- ```array()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```]
+- ```dettach()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```], that pointer is then dettached to the instance of the ByteArray
+- ```operator<<``` - an overload for the left-shift operator
+- ```operator>>``` - an overload for the right-shift operator
+- ```operator[]``` - an overload for the bracket operator, use for indexing the array

@@ -12,74 +12,7 @@ std::cout << PRINT_HEX_PARAM << "\n"
 
 namespace Krypt
 {
-    // /// Block Size in Bytes
-    // const static int AES_BLOCKSIZE = 16;
-    // const static int Nb = 4;
-
     typedef unsigned char Bytes;
-
-    class Sequence
-    {
-        Bytes* data;
-        size_t length;
-
-        public:
-
-        Sequence(size_t n) : data(new Bytes[n]), length(n) {}
-
-        Sequence(Bytes* src, size_t n) : data(new Bytes[n]), length(n)
-        {
-            memcpy(data,src,n);
-        }
-
-        const Bytes* data_c() const { return data; }
-
-        size_t size() const { return length; }
-
-        std::string to_string() const
-        {
-            return std::string(reinterpret_cast<char*>(data),length);
-        }
-
-        Bytes& operator[](size_t i)
-        {
-            #ifndef DISABLE_SEQUENCE_INDEXING
-            if(i>length) throw std::overflow_error("Krypt::Sequence [] index overflow");
-            if(i<length) throw std::overflow_error("Krypt::Sequence [] index underflow");
-            #endif
-
-            return data[i];
-        }
-
-        const Bytes& operator[](size_t i) const
-        {
-            #ifndef DISABLE_SEQUENCE_INDEXING
-            if(i>length) throw std::overflow_error("Krypt::Sequence [] index overflow");
-            if(i<length) throw std::overflow_error("Krypt::Sequence [] index underflow");
-            #endif
-            
-            return data[i];   
-        }
-
-        ~Sequence()
-        {
-            delete [] data;
-        }
-    };
-
-    std::ostream& operator<<(std::ostream& outputStream, const Sequence& instance)
-    {
-        for(size_t i=0; i<instance.size(); ++i)
-                outputStream << instance[i];
-            return outputStream;
-    }
-
-    std::istream& operator>>(std::istream& inputStream, Sequence& instance)
-    {
-        for(size_t i=0; i<instance.size(); ++i)
-            inputStream >> instance[i];
-        return inputStream;
-    }
 
     static const Bytes sbox[256] = {
         0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76,
