@@ -44,11 +44,6 @@ int main()
     // `Krypt::Bytes` is just a typedef for `unsigned char`
     ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
     ByteArray recover = krypt.decrypt(cipher.first,cipher.second);
-    
-    // the pair.first will contain the output, and pair.second will contain the length of the output
-
-    delete [] cipher.first;
-    delete [] recover.first;
 }
 ```
 
