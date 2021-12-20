@@ -53,7 +53,7 @@ namespace Krypt::Mode
         delete [] tempIV;
         delete [] recover;
 
-        return {recoverNoPadding.first,recoverNoPadding.second};
+        return recoverNoPadding;
     }
 }
 
