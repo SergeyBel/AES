@@ -55,7 +55,7 @@ int main()
 
 **```Krypt``` namespace contains the following :**
 
-| sub namespace | namespace classes |
+| sub-namespace | sub-namespace classes |
 | --- | --- |
 | ```BlockCipher``` | ```AES``` |
 | ```Padding``` | ```ZeroNulls```, ```ANSI_X9_23```, ```ISO_IEC_7816_4```, ```PKCS_5_7``` |
