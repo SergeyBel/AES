@@ -23,7 +23,7 @@ namespace Krypt::BlockCipher
               this->Nr = 14;
               break;
           default:
-              throw "Incorrect key length";
+              throw std::invalid_argument("Incorrect key length");
         }
 
         KeyExpansion(ByteArray);
