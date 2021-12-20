@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <exception>
 #include "types.hpp"
 #include "functions.hpp"
 
