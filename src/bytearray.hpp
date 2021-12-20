@@ -15,7 +15,7 @@ namespace Krypt
         size_t length();
 
         // returns the pointer array then leaving the member .array() equal to NULL, and .length() equal to zero
-        Bytes* dettach();
+        Bytes* detach();
 
         Bytes& operator[](size_t i);
         

@@ -66,7 +66,7 @@ int main()
 **The ```ByteArray``` class** is used to hold the output of ```encrypt()/decrypt()``` methods of the ```Mode``` classes, and the output of ```AddPadding()/RemovePadding()``` methods of the ```Padding``` classes... ```ByteArray``` methods are listed below :
 - ```length()``` - returns the size of the byte array
 - ```array()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```]
-- ```dettach()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```], that pointer is then dettached to the instance of the ByteArray
+- ```detach()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```], that pointer is then dettached to the instance of the ByteArray
 - ```operator<<``` - an overload for the left-shift operator
 - ```operator>>``` - an overload for the right-shift operator
 - ```operator[]``` - an overload for the bracket operator, use for indexing the array

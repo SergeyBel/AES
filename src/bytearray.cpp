@@ -10,7 +10,7 @@ namespace  Krypt
     size_t ByteArray::length() { return second; }
 
     // returns the pointer array, leaving the .array() equal to NULL, and .length() equal to zero
-    Bytes* ByteArray::dettach()
+    Bytes* ByteArray::detach()
     {
         Bytes* ptr = first;
         first = NULL;
