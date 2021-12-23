@@ -65,6 +65,19 @@ int main()
 
 <br>
 
+**Methods of the Classes inside the ```Mode``` namespace**
+- ```encrypt()```
+- ```decrypt()```
+- ```setIV()```
+
+**Methods of the Classes inside the ```BlockCipher``` namespace**
+- ```EncryptBlock()```
+- ```DecryptBlock()```
+
+**Methods of the Classes inside the ```Padding``` namespace**
+- ```AddPadding()```
+- ```RemovePadding()```
+
 **The ```ByteArray``` class** is used to hold the output of ```encrypt()/decrypt()``` methods of the ```Mode``` classes, and the output of ```AddPadding()/RemovePadding()``` methods of the ```Padding``` classes... ```ByteArray``` methods are listed below :
 - ```length()``` - returns the size of the byte array
 - ```array()``` - returns the byte array pointer[```Krypt::Bytes* or unsigned char*```]
