@@ -46,18 +46,22 @@ namespace Krypt::Mode
     class CBC : public MODE<CIPHER_TYPE,PADDING_TYPE>
     {
         public:
+            CBC(const Bytes* key, size_t keyLen);
             CBC(const Bytes* key, size_t keyLen, const Bytes* IV);
             std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+            void setIV(Bytes* IV);
     };
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
     class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
     {
         public:
+            CFB(const Bytes* key, size_t keyLen);
             CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
             std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
             std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+            void setIV(Bytes* IV);
     };
 }
 

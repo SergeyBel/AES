@@ -20,6 +20,9 @@ namespace Krypt::BlockCipher
 
             virtual void EncryptBlock(Bytes*, Bytes*) {};
             virtual void DecryptBlock(Bytes*, Bytes*) {};
+
+            void setIV(const Bytes* iv);
+
             virtual ~BASE_BLOCKCIPHER() = default;
     };
 

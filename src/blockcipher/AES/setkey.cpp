@@ -6,6 +6,12 @@
 
 namespace Krypt::BlockCipher
 {
+    void BASE_BLOCKCIPHER::setIV(const Bytes* iv)
+    {
+        this->IV = new Bytes[this->BLOCK_SIZE];
+        memcpy(this->IV,iv,this->BLOCK_SIZE);
+    }
+
     void AES::setKey(const Bytes* ByteArray, size_t keyLen)
     {
         switch (keyLen)

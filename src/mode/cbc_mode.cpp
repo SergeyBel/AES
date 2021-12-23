@@ -6,6 +6,14 @@
 namespace Krypt::Mode
 {
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    CBC<CIPHER_TYPE,PADDING_TYPE>::CBC(const Bytes* key, size_t keyLen)
+        : MODE<CIPHER_TYPE,PADDING_TYPE>()
+    {
+        this->Encryption = new CIPHER_TYPE(key,keyLen);
+        this->PaddingScheme = new PADDING_TYPE();
+    }
+
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
     CBC<CIPHER_TYPE,PADDING_TYPE>::CBC(const Bytes* key, size_t keyLen, const Bytes* IV)
         : MODE<CIPHER_TYPE,PADDING_TYPE>()
     {
@@ -54,6 +62,12 @@ namespace Krypt::Mode
         delete [] recover;
 
         return recoverNoPadding;
+    }
+
+    template<typename CIPHER_TYPE, typename PADDING_TYPE>
+    void CBC<CIPHER_TYPE,PADDING_TYPE>::setIV(Bytes* iv)
+    {
+        this->Encryption->setIV(iv);
     }
 }
 
