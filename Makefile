@@ -46,17 +46,17 @@ gh_test:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	g++ $(FLAGS) -g ./tests/moves.cpp -D CLASSIC_MAKE -lgtest -lpthread -maes -o bin/moves
-	g++ $(FLAGS) -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -maes -fsanitize=address -o bin/test
+	g++ -g ./tests/moves.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -o bin/moves
+	g++ -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test
 
 compile_debug:
-	g++ $(FLAGS) -g ./dev/main.cpp -o bin/debug
+	g++ -g ./dev/main.cpp -o bin/debug
 
 compile_profile:
-	g++ $(FLAGS) -pg ./dev/main.cpp -o bin/profile
+	g++ -pg ./dev/main.cpp -o bin/profile
 
 compile_release:
-	g++ $(FLAGS) -O2 ./dev/main.cpp -o bin/release
+	g++ -O2 ./dev/main.cpp -o bin/release
 
 run_test:
 	bin/moves

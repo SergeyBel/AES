@@ -8,11 +8,10 @@ namespace Krypt::BlockCipher
 {
     void AES::EncryptBlock(Bytes *src, Bytes *dest)
     {
-        if(AESNI_IS_AVAILABLE())
-        {
-            AesBlockEncrypt(src,dest,RoundedKeys,Nr,Nb);
-            return;
-        }
+        #ifdef USE_AESNI
+        AesBlockEncrypt(src,dest,RoundedKeys,Nr,Nb);
+        return;
+        #else
 
         Bytes state[4][4];
         uint8_t i, j, round;
@@ -46,15 +45,16 @@ namespace Krypt::BlockCipher
                 dest[i + 4 * j] = state[i][j];
             }
         }
+
+        #endif
     }
 
     void AES::DecryptBlock(Bytes *src, Bytes *dest)
     {
-        if(AESNI_IS_AVAILABLE())
-        {
-            AesBlockDecrypt(src,dest,RoundedKeys,Nr,Nb);
-            return;
-        }
+        #ifdef USE_AESNI
+        AesBlockDecrypt(src,dest,RoundedKeys,Nr,Nb);
+        return;
+        #else
 
         Bytes state[4][4];
         uint8_t i, j, round;
@@ -86,6 +86,8 @@ namespace Krypt::BlockCipher
                 dest[i + 4 * j] = state[i][j];
             }
         }
+
+        #endif
     }
 }
 
