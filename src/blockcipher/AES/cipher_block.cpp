@@ -2,11 +2,18 @@
 #define CIPHER_BLOCK_CPP
 
 #include "../../blockcipher.hpp"
+#include "simd_aes.hpp"
 
 namespace Krypt::BlockCipher
 {
     void AES::EncryptBlock(Bytes *src, Bytes *dest)
     {
+        if(AESNI_IS_AVAILABLE())
+        {
+            AesBlockEncrypt(src,dest,RoundedKeys,Nr,Nb);
+            return;
+        }
+
         Bytes state[4][4];
         uint8_t i, j, round;
 
@@ -43,6 +50,12 @@ namespace Krypt::BlockCipher
 
     void AES::DecryptBlock(Bytes *src, Bytes *dest)
     {
+        if(AESNI_IS_AVAILABLE())
+        {
+            AesBlockDecrypt(src,dest,RoundedKeys,Nr,Nb);
+            return;
+        }
+
         Bytes state[4][4];
         uint8_t i, j, round;
 
