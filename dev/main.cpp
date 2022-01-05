@@ -1,9 +1,8 @@
 #include <iostream>
 #include "../src/AES.h"
-using namespace std;
 
 int main()
 {
-  cout << "Aes dev" << endl;
+  std::cout << "Aes dev" << std::endl;
   return 0;
 }

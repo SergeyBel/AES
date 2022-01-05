@@ -35,8 +35,7 @@ speed_test:
 	docker-compose exec aes bin/speedtest
 
 clean:
-	docker-compose exec aes rm -rf bin 
-	docker-compose exec aes mkdir bin -p
+	docker-compose exec aes rm -rf bin/*
 
 
 workflow_build_test:
