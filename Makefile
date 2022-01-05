@@ -39,6 +39,9 @@ clean:
 	docker-compose exec aes mkdir bin -p
 
 
-workflow_build:
-	g++ $(FLAGS) -g -pthread ./src/AES.cpp ./tests/tests.cpp /usr/lib/libgtest.a -o bin/test	
+workflow_build_test:
+	g++ $(FLAGS) -g -pthread ./src/AES.cpp ./tests/tests.cpp /usr/lib/libgtest.a -o bin/test
+
+workflow_build_speed_test:
+	g++ $(FLAGS) -O2 ./src/AES.cpp ./speedtest/main.cpp -o bin/speedtest	
 

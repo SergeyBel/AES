@@ -24,14 +24,14 @@ jobs:
 
       - name: Build test
         run: |
-          make workflow_build
+          make workflow_build_test
 
       - name: Run test
         run: ./bin/test
       
       - name: Build speed test
         run: |
-          make build_speed_test
+          make workflow_build_speed_test
 
       - name: Run speed test
         run: ./bin/speedtest
