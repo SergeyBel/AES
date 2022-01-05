@@ -50,6 +50,7 @@ There are four executables in `bin` folder:
 * `test` - run tests  
 * `debug` - version for debugging (main code will be taken from dev/main.cpp)  
 * `profile` - version for profiling with gprof (main code will be taken from dev/main.cpp)  
+* `speedtest` - performance speed test (main code will be taken from speedtest/main.cpp)
 * `release` - version with optimization (main code will be taken from dev/main.cpp)  
 
 
@@ -58,9 +59,11 @@ Build commands:
 * `make build_test` - build `test` target
 * `make build_debug` - build `debug` target
 * `make build_profile` - build `profile` target
+* `make build_speed_test` - build `speedtest` target
 * `make build_release` - build `release` target
 * `make test` - run tests
 * `make debug` - run debug version
 * `make profile` - run profile version
+* `make speedtest` - run performance speed test
 * `make release` - run `release` version
 * `make clean` - clean `bin` directory

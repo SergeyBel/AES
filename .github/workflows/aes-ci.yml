@@ -22,13 +22,19 @@ jobs:
           sudo make
           sudo cp lib/*.a /usr/lib
 
-      - name: Build
+      - name: Build test
         run: |
-          mkdir bin 
-          make workflow_build
+          make workflow_build_test
 
-      - name: Test
+      - name: Run test
         run: ./bin/test
+      
+      - name: Build speed test
+        run: |
+          make workflow_build_speed_test
+
+      - name: Run speed test
+        run: ./bin/speedtest
       
       
       

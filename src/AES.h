@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <vector>
 
-using namespace std;
-
 enum class AESKeyLength {
   AES_128,
   AES_192,
@@ -61,9 +59,9 @@ private:
 
   void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
-  vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len);
+  std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len);
 
-  unsigned char *VectorToArray(vector<unsigned char> a);
+  unsigned char *VectorToArray(std::vector<unsigned char> a);
 
 public:
   explicit AES(AESKeyLength keyLength = AESKeyLength::AES_256);
@@ -82,22 +80,22 @@ public:
 
 
 
-  vector<unsigned char> EncryptECB(vector<unsigned char> in, vector<unsigned char> key);
+  std::vector<unsigned char> EncryptECB(std::vector<unsigned char> in, std::vector<unsigned char> key);
 
-  vector<unsigned char> DecryptECB(vector<unsigned char> in, vector<unsigned char> key);
+  std::vector<unsigned char> DecryptECB(std::vector<unsigned char> in, std::vector<unsigned char> key);
 
-  vector<unsigned char> EncryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+  std::vector<unsigned char> EncryptCBC(std::vector<unsigned char> in, std::vector<unsigned char> key, std::vector<unsigned char> iv);
 
-  vector<unsigned char> DecryptCBC(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+  std::vector<unsigned char> DecryptCBC(std::vector<unsigned char> in, std::vector<unsigned char> key, std::vector<unsigned char> iv);
 
-  vector<unsigned char> EncryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+  std::vector<unsigned char> EncryptCFB(std::vector<unsigned char> in, std::vector<unsigned char> key, std::vector<unsigned char> iv);
 
-  vector<unsigned char> DecryptCFB(vector<unsigned char> in, vector<unsigned char> key, vector<unsigned char> iv);
+  std::vector<unsigned char> DecryptCFB(std::vector<unsigned char> in, std::vector<unsigned char> key, std::vector<unsigned char> iv);
 
 
   void printHexArray(unsigned char a[], unsigned int n);
 
-  void printHexVector(vector<unsigned char> a);
+  void printHexVector(std::vector<unsigned char> a);
 };
 
 const unsigned char sbox[16][16] = {
