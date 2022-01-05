@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sys/time.h>
+#include <ctime>
 #include "../src/AES.h"
 using namespace std;
 
