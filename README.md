@@ -3,6 +3,7 @@ C++ AES(Advanced Encryption Standard) implementation
  
 ![Build Status](https://github.com/SergeyBel/AES/actions/workflows/aes-ci.yml/badge.svg?branch=master)
 
+# Usage
 
 **This class is very simple to use:**
 ```c++
@@ -33,14 +34,20 @@ c = aes.EncryptECB(plain, key);
 ECB, CBC, CFB modes are supported.
 
 
-You can read more about AES here:
-
-https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-
-http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
 
-**Development:**
+# Padding
+This library do not provide any padding because padding is not part of AES standard. Plaintext and ciphertext length in bytes must be divisible by 16. If length doesn't satisfy this condition exception will be thrown
+
+
+# Links
+
+
+* [Wiki](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
+* [NIST](https://www.nist.gov/publications/advanced-encryption-standard-aes)
+
+# Development:
+
 1. `git clone https://github.com/SergeyBel/AES.git`
 1. `docker-compose build`
 1. `docker-compose up -d`
