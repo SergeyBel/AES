@@ -46,10 +46,8 @@ private:
   void InvMixColumns(unsigned char **state);
 
   void InvShiftRows(unsigned char **state);
-
-  unsigned char* PaddingNulls(unsigned char in[], unsigned int inLen, unsigned int alignLen);
   
-  unsigned int GetPaddingLength(unsigned int len);
+  void CheckLength(unsigned int len);
 
   void KeyExpansion(unsigned char key[], unsigned char w[]);
 
@@ -66,15 +64,15 @@ private:
 public:
   explicit AES(AESKeyLength keyLength = AESKeyLength::AES_256);
 
-  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned int &outLen);
+  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
 
   unsigned char *DecryptECB(unsigned char in[], unsigned int inLen, unsigned char key[]);
 
-  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
+  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
   unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
-  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv, unsigned int &outLen);
+  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
   unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen, unsigned char key[], unsigned char *iv);
 
