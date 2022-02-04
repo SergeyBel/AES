@@ -26,7 +26,6 @@ int main()
 {
   const unsigned int MEGABYTE = 1024 * 1024 * sizeof(unsigned char);
 
-  unsigned int len = 0;
   unsigned int megabytesCount = 10;
   unsigned int plainLength = megabytesCount * MEGABYTE;
   unsigned char key[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
@@ -38,7 +37,7 @@ int main()
   
   AES aes(AESKeyLength::AES_256);
   unsigned long start = getMicroseconds();
-  unsigned char *out = aes.EncryptECB(plain, plainLength, key, len);
+  unsigned char *out = aes.EncryptECB(plain, plainLength, key);
   unsigned long delta = getMicroseconds() - start;
 
   double speed = (double)megabytesCount / delta * MICROSECONDS;
