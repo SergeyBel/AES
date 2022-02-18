@@ -45,7 +45,7 @@ TEST(KeyLengths, KeyLength256)
 
 
 
-TEST(ECB, EncryptDecrypt)
+TEST(ECB, EncryptDecryptOneBlock)
 {
   AES aes(AESKeyLength::AES_256);
   unsigned char plain[] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
@@ -60,7 +60,7 @@ TEST(ECB, EncryptDecrypt)
   delete[] innew;
 }
 
-TEST(ECB, EncryptDecryptVector)
+TEST(ECB, EncryptDecryptVectorOneBlock)
 {
   AES aes(AESKeyLength::AES_256);
   std::vector<unsigned char> plain = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
@@ -363,6 +363,45 @@ TEST(CFB, DecryptTwoBlocksVector)
   unsigned char *out = aes.DecryptCFB(encrypted, 2 * BLOCK_BYTES_LENGTH, key, iv);
   ASSERT_FALSE(memcmp(right, out, 2 * BLOCK_BYTES_LENGTH));
   delete[] out;
+}
+
+
+TEST(LongData, EncryptDecryptOneKb)
+{
+  AES aes(AESKeyLength::AES_256);
+  unsigned int kbSize = 1024 * sizeof(unsigned char);
+  unsigned char* plain = new unsigned char[kbSize];
+  for (unsigned int i = 0; i < kbSize; i++) {
+    plain[i] = i % 256;
+  }
+
+  unsigned char key[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11,
+    0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f };
+  
+  unsigned char *out = aes.EncryptECB(plain, kbSize, key);
+  unsigned char *innew = aes.DecryptECB(out, kbSize, key);
+  ASSERT_FALSE(memcmp(innew, plain, kbSize));
+  delete[] plain;
+  delete[] out;
+  delete[] innew;
+}
+
+TEST(LongData, EncryptDecryptVectorOneKb)
+{
+  AES aes(AESKeyLength::AES_256);
+  unsigned int kbSize = 1024 * sizeof(unsigned char);
+  std::vector<unsigned char> plain(kbSize);
+  for (unsigned int i = 0; i < kbSize; i++) {
+    plain[i] = i % 256;
+  }
+ 
+
+  std::vector<unsigned char> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11,
+    0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f };
+  
+  std::vector<unsigned char> out = aes.EncryptECB(plain, key);
+  std::vector<unsigned char> innew = aes.DecryptECB(out, key);
+  ASSERT_EQ(innew, plain);
 }
 
 
