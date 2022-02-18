@@ -57,7 +57,7 @@ private:
 
   void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len);
 
-  std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned char len);
+  std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned int len);
 
   unsigned char *VectorToArray(std::vector<unsigned char> a);
 

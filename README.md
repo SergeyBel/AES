@@ -36,7 +36,7 @@ ECB, CBC, CFB modes are supported.
 
 
 # Padding
-This library do not provide any padding because padding is not part of AES standard. Plaintext and ciphertext length in bytes must be divisible by 16. If length doesn't satisfy this condition exception will be thrown
+This library does not provide any padding because padding is not part of AES standard. Plaintext and ciphertext length in bytes must be divisible by 16. If length doesn't satisfy this condition exception will be thrown
 
 
 # Links
@@ -70,6 +70,6 @@ Build commands:
 * `make test` - run tests
 * `make debug` - run debug version
 * `make profile` - run profile version
-* `make speedtest` - run performance speed test
+* `make speed_test` - run performance speed test
 * `make release` - run `release` version
 * `make clean` - clean `bin` directory
