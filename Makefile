@@ -34,6 +34,9 @@ release:
 speed_test:
 	docker-compose exec aes bin/speedtest
 
+style_fix:
+	docker-compose exec aes bash -c "clang-format -i src/*.cpp src/*.h tests/*.cpp"
+
 clean:
 	docker-compose exec aes rm -rf bin/*
 

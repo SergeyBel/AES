@@ -67,6 +67,7 @@ Build commands:
 * `make build_profile` - build `profile` target
 * `make build_speed_test` - build `speedtest` target
 * `make build_release` - build `release` target
+* `make style_fix` - fix code style
 * `make test` - run tests
 * `make debug` - run debug version
 * `make profile` - run profile version
