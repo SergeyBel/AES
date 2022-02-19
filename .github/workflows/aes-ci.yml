@@ -15,7 +15,7 @@ jobs:
 
       - name: Code style
         run: |
-          apt install clang-format
+          sudo apt install clang-format
           clang-format --dry-run --Werror -i src/*.cpp src/*.h tests/*.cpp tests/*.h
         
       - name: Tests
