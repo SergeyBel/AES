@@ -26,7 +26,6 @@ jobs:
           sudo cmake CMakeLists.txt
           sudo make
           sudo cp lib/*.a /usr/lib
-          cd /app
       
       - name: Tests
         run: |
