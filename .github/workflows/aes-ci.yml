@@ -27,10 +27,8 @@ jobs:
           sudo make
           sudo cp lib/*.a /usr/lib
           cd /app
-          make workflow_build_test
-          ./bin/test
       
-       - name: Tests
+      - name: Tests
         run: |
           make workflow_build_test
           ./bin/test
