@@ -59,7 +59,7 @@ class AES {
 
   std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned int len);
 
-  unsigned char *VectorToArray(std::vector<unsigned char> a);
+  unsigned char *VectorToArray(std::vector<unsigned char> &a);
 
  public:
   explicit AES(AESKeyLength keyLength = AESKeyLength::AES_256);

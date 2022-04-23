@@ -415,7 +415,7 @@ std::vector<unsigned char> AES::ArrayToVector(unsigned char *a,
   return v;
 }
 
-unsigned char *AES::VectorToArray(std::vector<unsigned char> a) {
+unsigned char *AES::VectorToArray(std::vector<unsigned char> &a) {
   return a.data();
 }
 
