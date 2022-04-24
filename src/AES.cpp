@@ -51,7 +51,7 @@ unsigned char *AES::DecryptECB(const unsigned char in[], unsigned int inLen,
 }
 
 unsigned char *AES::EncryptCBC(const unsigned char in[], unsigned int inLen,
-                               const unsigned char key[], unsigned char *iv) {
+                               const unsigned char key[], const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -71,7 +71,7 @@ unsigned char *AES::EncryptCBC(const unsigned char in[], unsigned int inLen,
 }
 
 unsigned char *AES::DecryptCBC(const unsigned char in[], unsigned int inLen,
-                               const unsigned char key[], unsigned char *iv) {
+                               const unsigned char key[], const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -91,7 +91,7 @@ unsigned char *AES::DecryptCBC(const unsigned char in[], unsigned int inLen,
 }
 
 unsigned char *AES::EncryptCFB(const unsigned char in[], unsigned int inLen,
-                               const unsigned char key[], unsigned char *iv) {
+                               const unsigned char key[], const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -113,7 +113,7 @@ unsigned char *AES::EncryptCFB(const unsigned char in[], unsigned int inLen,
 }
 
 unsigned char *AES::DecryptCFB(const unsigned char in[], unsigned int inLen,
-                               const unsigned char key[], unsigned char *iv) {
+                               const unsigned char key[], const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
