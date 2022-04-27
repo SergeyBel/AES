@@ -138,7 +138,7 @@ unsigned char *AES::DecryptCFB(const unsigned char in[], unsigned int inLen,
   return out;
 }
 
-void AES::CheckLength(const unsigned int len) {
+void AES::CheckLength(unsigned int len) {
   if (len % blockBytesLen != 0) {
     throw std::length_error("Plaintext length must be divisible by " +
                             blockBytesLen);
