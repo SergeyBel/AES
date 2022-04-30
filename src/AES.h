@@ -46,41 +46,41 @@ class AES {
 
   void CheckLength(unsigned int len);
 
-  void KeyExpansion(unsigned char key[], unsigned char w[]);
+  void KeyExpansion(const unsigned char key[], unsigned char w[]);
 
-  void EncryptBlock(unsigned char in[], unsigned char out[],
+  void EncryptBlock(const unsigned char in[], unsigned char out[],
                     unsigned char key[]);
 
-  void DecryptBlock(unsigned char in[], unsigned char out[],
+  void DecryptBlock(const unsigned char in[], unsigned char out[],
                     unsigned char key[]);
 
-  void XorBlocks(unsigned char *a, unsigned char *b, unsigned char *c,
-                 unsigned int len);
+  void XorBlocks(const unsigned char *a, const unsigned char *b,
+                 unsigned char *c, unsigned int len);
 
   std::vector<unsigned char> ArrayToVector(unsigned char *a, unsigned int len);
 
   unsigned char *VectorToArray(std::vector<unsigned char> &a);
 
  public:
-  explicit AES(AESKeyLength keyLength = AESKeyLength::AES_256);
+  explicit AES(const AESKeyLength keyLength = AESKeyLength::AES_256);
 
-  unsigned char *EncryptECB(unsigned char in[], unsigned int inLen,
-                            unsigned char key[]);
+  unsigned char *EncryptECB(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[]);
 
-  unsigned char *DecryptECB(unsigned char in[], unsigned int inLen,
-                            unsigned char key[]);
+  unsigned char *DecryptECB(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[]);
 
-  unsigned char *EncryptCBC(unsigned char in[], unsigned int inLen,
-                            unsigned char key[], unsigned char *iv);
+  unsigned char *EncryptCBC(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[], const unsigned char *iv);
 
-  unsigned char *DecryptCBC(unsigned char in[], unsigned int inLen,
-                            unsigned char key[], unsigned char *iv);
+  unsigned char *DecryptCBC(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[], const unsigned char *iv);
 
-  unsigned char *EncryptCFB(unsigned char in[], unsigned int inLen,
-                            unsigned char key[], unsigned char *iv);
+  unsigned char *EncryptCFB(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[], const unsigned char *iv);
 
-  unsigned char *DecryptCFB(unsigned char in[], unsigned int inLen,
-                            unsigned char key[], unsigned char *iv);
+  unsigned char *DecryptCFB(const unsigned char in[], unsigned int inLen,
+                            const unsigned char key[], const unsigned char *iv);
 
   std::vector<unsigned char> EncryptECB(std::vector<unsigned char> in,
                                         std::vector<unsigned char> key);

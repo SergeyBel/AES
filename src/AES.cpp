@@ -1,6 +1,6 @@
 #include "AES.h"
 
-AES::AES(AESKeyLength keyLength) {
+AES::AES(const AESKeyLength keyLength) {
   this->Nb = 4;
   switch (keyLength) {
     case AESKeyLength::AES_128:
@@ -20,8 +20,8 @@ AES::AES(AESKeyLength keyLength) {
   blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
 }
 
-unsigned char *AES::EncryptECB(unsigned char in[], unsigned int inLen,
-                               unsigned char key[]) {
+unsigned char *AES::EncryptECB(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[]) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
@@ -35,8 +35,8 @@ unsigned char *AES::EncryptECB(unsigned char in[], unsigned int inLen,
   return out;
 }
 
-unsigned char *AES::DecryptECB(unsigned char in[], unsigned int inLen,
-                               unsigned char key[]) {
+unsigned char *AES::DecryptECB(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[]) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
@@ -50,8 +50,9 @@ unsigned char *AES::DecryptECB(unsigned char in[], unsigned int inLen,
   return out;
 }
 
-unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen,
-                               unsigned char key[], unsigned char *iv) {
+unsigned char *AES::EncryptCBC(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[],
+                               const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -70,8 +71,9 @@ unsigned char *AES::EncryptCBC(unsigned char in[], unsigned int inLen,
   return out;
 }
 
-unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen,
-                               unsigned char key[], unsigned char *iv) {
+unsigned char *AES::DecryptCBC(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[],
+                               const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -90,8 +92,9 @@ unsigned char *AES::DecryptCBC(unsigned char in[], unsigned int inLen,
   return out;
 }
 
-unsigned char *AES::EncryptCFB(unsigned char in[], unsigned int inLen,
-                               unsigned char key[], unsigned char *iv) {
+unsigned char *AES::EncryptCFB(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[],
+                               const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -112,8 +115,9 @@ unsigned char *AES::EncryptCFB(unsigned char in[], unsigned int inLen,
   return out;
 }
 
-unsigned char *AES::DecryptCFB(unsigned char in[], unsigned int inLen,
-                               unsigned char key[], unsigned char *iv) {
+unsigned char *AES::DecryptCFB(const unsigned char in[], unsigned int inLen,
+                               const unsigned char key[],
+                               const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
   unsigned char *block = new unsigned char[blockBytesLen];
@@ -141,7 +145,7 @@ void AES::CheckLength(unsigned int len) {
   }
 }
 
-void AES::EncryptBlock(unsigned char in[], unsigned char out[],
+void AES::EncryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
   unsigned char **state = new unsigned char *[4];
   state[0] = new unsigned char[4 * Nb];
@@ -179,7 +183,7 @@ void AES::EncryptBlock(unsigned char in[], unsigned char out[],
   delete[] state;
 }
 
-void AES::DecryptBlock(unsigned char in[], unsigned char out[],
+void AES::DecryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
   unsigned char **state = new unsigned char *[4];
   state[0] = new unsigned char[4 * Nb];
@@ -316,7 +320,7 @@ void AES::Rcon(unsigned char *a, int n) {
   a[1] = a[2] = a[3] = 0;
 }
 
-void AES::KeyExpansion(unsigned char key[], unsigned char w[]) {
+void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
   unsigned char *temp = new unsigned char[4];
   unsigned char *rcon = new unsigned char[4];
 
@@ -390,8 +394,8 @@ void AES::InvShiftRows(unsigned char **state) {
   ShiftRow(state, 3, Nb - 3);
 }
 
-void AES::XorBlocks(unsigned char *a, unsigned char *b, unsigned char *c,
-                    unsigned int len) {
+void AES::XorBlocks(const unsigned char *a, const unsigned char *b,
+                    unsigned char *c, unsigned int len) {
   for (unsigned int i = 0; i < len; i++) {
     c[i] = a[i] ^ b[i];
   }
