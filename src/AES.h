@@ -107,6 +107,10 @@ class AES {
   void printHexArray(unsigned char a[], unsigned int n);
 
   void printHexVector(std::vector<unsigned char> a);
+
+  // custom pad and unpad functions
+  void pad(std::vector<unsigned char> &in);
+  void unpad(std::vector<unsigned char> &in);
 };
 
 const unsigned char sbox[16][16] = {

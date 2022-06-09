@@ -480,3 +480,23 @@ std::vector<unsigned char> AES::DecryptCFB(std::vector<unsigned char> in,
   delete[] out;
   return v;
 }
+
+void AES::pad(std::vector<unsigned char> &in) {
+  if (in.size() % blockBytesLen != 0) {
+    in.push_back(0x80); // shows where padding starts
+    if (in.size() % blockBytesLen != 0) {
+      while (in.size() % blockBytesLen != 0) {
+        in.push_back(0x00); // padding
+      }
+    }
+  }
+}
+
+void AES::unpad(std::vector<unsigned char> &in) {
+  while (in.back() == 0x00) {
+    in.pop_back();
+  }
+  if (in.back() == 0x80) {
+    in.pop_back();
+  }
+}
