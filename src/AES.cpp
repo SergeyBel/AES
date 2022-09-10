@@ -1,7 +1,6 @@
 #include "AES.h"
 
 AES::AES(const AESKeyLength keyLength) {
-  this->Nb = 4;
   switch (keyLength) {
     case AESKeyLength::AES_128:
       this->Nk = 4;
@@ -16,8 +15,6 @@ AES::AES(const AESKeyLength keyLength) {
       this->Nr = 14;
       break;
   }
-
-  blockBytesLen = 4 * this->Nb * sizeof(unsigned char);
 }
 
 unsigned char *AES::EncryptECB(const unsigned char in[], unsigned int inLen,
@@ -147,12 +144,8 @@ void AES::CheckLength(unsigned int len) {
 
 void AES::EncryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
-  unsigned char **state = new unsigned char *[4];
-  state[0] = new unsigned char[4 * Nb];
+  unsigned char state[4][Nb];
   int i, j, round;
-  for (i = 0; i < 4; i++) {
-    state[i] = state[0] + Nb * i;
-  }
 
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -178,19 +171,12 @@ void AES::EncryptBlock(const unsigned char in[], unsigned char out[],
       out[i + 4 * j] = state[i][j];
     }
   }
-
-  delete[] state[0];
-  delete[] state;
 }
 
 void AES::DecryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
-  unsigned char **state = new unsigned char *[4];
-  state[0] = new unsigned char[4 * Nb];
+  unsigned char state[4][Nb];
   int i, j, round;
-  for (i = 0; i < 4; i++) {
-    state[i] = state[0] + Nb * i;
-  }
 
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -216,12 +202,9 @@ void AES::DecryptBlock(const unsigned char in[], unsigned char out[],
       out[i + 4 * j] = state[i][j];
     }
   }
-
-  delete[] state[0];
-  delete[] state;
 }
 
-void AES::SubBytes(unsigned char **state) {
+void AES::SubBytes(unsigned char state[4][Nb]) {
   int i, j;
   unsigned char t;
   for (i = 0; i < 4; i++) {
@@ -232,7 +215,7 @@ void AES::SubBytes(unsigned char **state) {
   }
 }
 
-void AES::ShiftRow(unsigned char **state, int i,
+void AES::ShiftRow(unsigned char state[4][Nb], int i,
                    int n)  // shift row i on n positions
 {
   unsigned char *tmp = new unsigned char[Nb];
@@ -244,7 +227,7 @@ void AES::ShiftRow(unsigned char **state, int i,
   delete[] tmp;
 }
 
-void AES::ShiftRows(unsigned char **state) {
+void AES::ShiftRows(unsigned char state[4][Nb]) {
   ShiftRow(state, 1, 1);
   ShiftRow(state, 2, 2);
   ShiftRow(state, 3, 3);
@@ -255,8 +238,8 @@ unsigned char AES::xtime(unsigned char b)  // multiply on x
   return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
 }
 
-void AES::MixColumns(unsigned char **state) {
-  unsigned char temp_state[4][4];
+void AES::MixColumns(unsigned char state[4][Nb]) {
+  unsigned char temp_state[4][Nb];
 
   for (size_t i = 0; i < 4; ++i) {
     memset(temp_state[i], 0, 4);
@@ -278,7 +261,7 @@ void AES::MixColumns(unsigned char **state) {
   }
 }
 
-void AES::AddRoundKey(unsigned char **state, unsigned char *key) {
+void AES::AddRoundKey(unsigned char state[4][Nb], unsigned char *key) {
   int i, j;
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -357,7 +340,7 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
   delete[] temp;
 }
 
-void AES::InvSubBytes(unsigned char **state) {
+void AES::InvSubBytes(unsigned char state[4][Nb]) {
   int i, j;
   unsigned char t;
   for (i = 0; i < 4; i++) {
@@ -368,8 +351,8 @@ void AES::InvSubBytes(unsigned char **state) {
   }
 }
 
-void AES::InvMixColumns(unsigned char **state) {
-  unsigned char temp_state[4][4];
+void AES::InvMixColumns(unsigned char state[4][Nb]) {
+  unsigned char temp_state[4][Nb];
 
   for (size_t i = 0; i < 4; ++i) {
     memset(temp_state[i], 0, 4);
@@ -388,7 +371,7 @@ void AES::InvMixColumns(unsigned char **state) {
   }
 }
 
-void AES::InvShiftRows(unsigned char **state) {
+void AES::InvShiftRows(unsigned char state[4][Nb]) {
   ShiftRow(state, 1, Nb - 1);
   ShiftRow(state, 2, Nb - 2);
   ShiftRow(state, 3, Nb - 3);

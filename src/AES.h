@@ -11,24 +11,24 @@ enum class AESKeyLength { AES_128, AES_192, AES_256 };
 
 class AES {
  private:
-  int Nb;
+  static constexpr unsigned int Nb = 4;
+  static constexpr unsigned int blockBytesLen = 4 * Nb * sizeof(unsigned char);
+
   int Nk;
   int Nr;
 
-  unsigned int blockBytesLen;
+  void SubBytes(unsigned char state[4][Nb]);
 
-  void SubBytes(unsigned char **state);
-
-  void ShiftRow(unsigned char **state, int i,
+  void ShiftRow(unsigned char state[4][Nb], int i,
                 int n);  // shift row i on n positions
 
-  void ShiftRows(unsigned char **state);
+  void ShiftRows(unsigned char state[4][Nb]);
 
   unsigned char xtime(unsigned char b);  // multiply on x
 
-  void MixColumns(unsigned char **state);
+  void MixColumns(unsigned char state[4][Nb]);
 
-  void AddRoundKey(unsigned char **state, unsigned char *key);
+  void AddRoundKey(unsigned char state[4][Nb], unsigned char *key);
 
   void SubWord(unsigned char *a);
 
@@ -38,11 +38,11 @@ class AES {
 
   void Rcon(unsigned char *a, int n);
 
-  void InvSubBytes(unsigned char **state);
+  void InvSubBytes(unsigned char state[4][Nb]);
 
-  void InvMixColumns(unsigned char **state);
+  void InvMixColumns(unsigned char state[4][Nb]);
 
-  void InvShiftRows(unsigned char **state);
+  void InvShiftRows(unsigned char state[4][Nb]);
 
   void CheckLength(unsigned int len);
 
