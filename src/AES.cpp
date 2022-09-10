@@ -139,7 +139,7 @@ void AES::CheckLength(unsigned int len) {
 void AES::EncryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
   unsigned char state[4][Nb];
-  int i, j, round;
+  unsigned int i, j, round;
 
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -170,7 +170,7 @@ void AES::EncryptBlock(const unsigned char in[], unsigned char out[],
 void AES::DecryptBlock(const unsigned char in[], unsigned char out[],
                        unsigned char *roundKeys) {
   unsigned char state[4][Nb];
-  int i, j, round;
+  unsigned int i, j, round;
 
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -199,7 +199,7 @@ void AES::DecryptBlock(const unsigned char in[], unsigned char out[],
 }
 
 void AES::SubBytes(unsigned char state[4][Nb]) {
-  int i, j;
+  unsigned int i, j;
   unsigned char t;
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
@@ -209,11 +209,11 @@ void AES::SubBytes(unsigned char state[4][Nb]) {
   }
 }
 
-void AES::ShiftRow(unsigned char state[4][Nb], int i,
-                   int n)  // shift row i on n positions
+void AES::ShiftRow(unsigned char state[4][Nb], unsigned int i,
+                   unsigned int n)  // shift row i on n positions
 {
   unsigned char tmp[Nb];
-  for (int j = 0; j < Nb; j++) {
+  for (unsigned int j = 0; j < Nb; j++) {
     tmp[j] = state[i][(j + n) % Nb];
   }
   memcpy(state[i], tmp, Nb * sizeof(unsigned char));
@@ -254,7 +254,7 @@ void AES::MixColumns(unsigned char state[4][Nb]) {
 }
 
 void AES::AddRoundKey(unsigned char state[4][Nb], unsigned char *key) {
-  int i, j;
+  unsigned int i, j;
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {
       state[i][j] = state[i][j] ^ key[i + 4 * j];
@@ -284,8 +284,8 @@ void AES::XorWords(unsigned char *a, unsigned char *b, unsigned char *c) {
   }
 }
 
-void AES::Rcon(unsigned char *a, int n) {
-  int i;
+void AES::Rcon(unsigned char *a, unsigned int n) {
+  unsigned int i;
   unsigned char c = 1;
   for (i = 0; i < n - 1; i++) {
     c = xtime(c);
@@ -299,7 +299,7 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
   unsigned char temp[4];
   unsigned char rcon[4];
 
-  int i = 0;
+  unsigned int i = 0;
   while (i < 4 * Nk) {
     w[i] = key[i];
     i++;
@@ -330,7 +330,7 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
 }
 
 void AES::InvSubBytes(unsigned char state[4][Nb]) {
-  int i, j;
+  unsigned int i, j;
   unsigned char t;
   for (i = 0; i < 4; i++) {
     for (j = 0; j < Nb; j++) {

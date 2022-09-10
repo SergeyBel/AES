@@ -14,13 +14,13 @@ class AES {
   static constexpr unsigned int Nb = 4;
   static constexpr unsigned int blockBytesLen = 4 * Nb * sizeof(unsigned char);
 
-  int Nk;
-  int Nr;
+  unsigned int Nk;
+  unsigned int Nr;
 
   void SubBytes(unsigned char state[4][Nb]);
 
-  void ShiftRow(unsigned char state[4][Nb], int i,
-                int n);  // shift row i on n positions
+  void ShiftRow(unsigned char state[4][Nb], unsigned int i,
+                unsigned int n);  // shift row i on n positions
 
   void ShiftRows(unsigned char state[4][Nb]);
 
@@ -36,7 +36,7 @@ class AES {
 
   void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
 
-  void Rcon(unsigned char *a, int n);
+  void Rcon(unsigned char *a, unsigned int n);
 
   void InvSubBytes(unsigned char state[4][Nb]);
 
