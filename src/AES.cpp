@@ -218,13 +218,11 @@ void AES::SubBytes(unsigned char state[4][Nb]) {
 void AES::ShiftRow(unsigned char state[4][Nb], int i,
                    int n)  // shift row i on n positions
 {
-  unsigned char *tmp = new unsigned char[Nb];
+  unsigned char tmp[Nb];
   for (int j = 0; j < Nb; j++) {
     tmp[j] = state[i][(j + n) % Nb];
   }
   memcpy(state[i], tmp, Nb * sizeof(unsigned char));
-
-  delete[] tmp;
 }
 
 void AES::ShiftRows(unsigned char state[4][Nb]) {
