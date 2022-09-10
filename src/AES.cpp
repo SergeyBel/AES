@@ -302,8 +302,8 @@ void AES::Rcon(unsigned char *a, int n) {
 }
 
 void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
-  unsigned char *temp = new unsigned char[4];
-  unsigned char *rcon = new unsigned char[4];
+  unsigned char temp[4];
+  unsigned char rcon[4];
 
   int i = 0;
   while (i < 4 * Nk) {
@@ -333,9 +333,6 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[]) {
     w[i + 3] = w[i + 3 - 4 * Nk] ^ temp[3];
     i += 4;
   }
-
-  delete[] rcon;
-  delete[] temp;
 }
 
 void AES::InvSubBytes(unsigned char state[4][Nb]) {
