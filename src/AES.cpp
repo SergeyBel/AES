@@ -52,7 +52,7 @@ unsigned char *AES::EncryptCBC(const unsigned char in[], unsigned int inLen,
                                const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
-  unsigned char *block = new unsigned char[blockBytesLen];
+  unsigned char block[blockBytesLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
   KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
@@ -62,7 +62,6 @@ unsigned char *AES::EncryptCBC(const unsigned char in[], unsigned int inLen,
     memcpy(block, out + i, blockBytesLen);
   }
 
-  delete[] block;
   delete[] roundKeys;
 
   return out;
@@ -73,7 +72,7 @@ unsigned char *AES::DecryptCBC(const unsigned char in[], unsigned int inLen,
                                const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
-  unsigned char *block = new unsigned char[blockBytesLen];
+  unsigned char block[blockBytesLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
   KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
@@ -83,7 +82,6 @@ unsigned char *AES::DecryptCBC(const unsigned char in[], unsigned int inLen,
     memcpy(block, in + i, blockBytesLen);
   }
 
-  delete[] block;
   delete[] roundKeys;
 
   return out;
@@ -94,8 +92,8 @@ unsigned char *AES::EncryptCFB(const unsigned char in[], unsigned int inLen,
                                const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
-  unsigned char *block = new unsigned char[blockBytesLen];
-  unsigned char *encryptedBlock = new unsigned char[blockBytesLen];
+  unsigned char block[blockBytesLen];
+  unsigned char encryptedBlock[blockBytesLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
   KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
@@ -105,8 +103,6 @@ unsigned char *AES::EncryptCFB(const unsigned char in[], unsigned int inLen,
     memcpy(block, out + i, blockBytesLen);
   }
 
-  delete[] block;
-  delete[] encryptedBlock;
   delete[] roundKeys;
 
   return out;
@@ -117,8 +113,8 @@ unsigned char *AES::DecryptCFB(const unsigned char in[], unsigned int inLen,
                                const unsigned char *iv) {
   CheckLength(inLen);
   unsigned char *out = new unsigned char[inLen];
-  unsigned char *block = new unsigned char[blockBytesLen];
-  unsigned char *encryptedBlock = new unsigned char[blockBytesLen];
+  unsigned char block[blockBytesLen];
+  unsigned char encryptedBlock[blockBytesLen];
   unsigned char *roundKeys = new unsigned char[4 * Nb * (Nr + 1)];
   KeyExpansion(key, roundKeys);
   memcpy(block, iv, blockBytesLen);
@@ -128,8 +124,6 @@ unsigned char *AES::DecryptCFB(const unsigned char in[], unsigned int inLen,
     memcpy(block, in + i, blockBytesLen);
   }
 
-  delete[] block;
-  delete[] encryptedBlock;
   delete[] roundKeys;
 
   return out;
