@@ -11,24 +11,24 @@ enum class AESKeyLength { AES_128, AES_192, AES_256 };
 
 class AES {
  private:
-  int Nb;
-  int Nk;
-  int Nr;
+  static constexpr unsigned int Nb = 4;
+  static constexpr unsigned int blockBytesLen = 4 * Nb * sizeof(unsigned char);
 
-  unsigned int blockBytesLen;
+  unsigned int Nk;
+  unsigned int Nr;
 
-  void SubBytes(unsigned char **state);
+  void SubBytes(unsigned char state[4][Nb]);
 
-  void ShiftRow(unsigned char **state, int i,
-                int n);  // shift row i on n positions
+  void ShiftRow(unsigned char state[4][Nb], unsigned int i,
+                unsigned int n);  // shift row i on n positions
 
-  void ShiftRows(unsigned char **state);
+  void ShiftRows(unsigned char state[4][Nb]);
 
   unsigned char xtime(unsigned char b);  // multiply on x
 
-  void MixColumns(unsigned char **state);
+  void MixColumns(unsigned char state[4][Nb]);
 
-  void AddRoundKey(unsigned char **state, unsigned char *key);
+  void AddRoundKey(unsigned char state[4][Nb], unsigned char *key);
 
   void SubWord(unsigned char *a);
 
@@ -36,13 +36,13 @@ class AES {
 
   void XorWords(unsigned char *a, unsigned char *b, unsigned char *c);
 
-  void Rcon(unsigned char *a, int n);
+  void Rcon(unsigned char *a, unsigned int n);
 
-  void InvSubBytes(unsigned char **state);
+  void InvSubBytes(unsigned char state[4][Nb]);
 
-  void InvMixColumns(unsigned char **state);
+  void InvMixColumns(unsigned char state[4][Nb]);
 
-  void InvShiftRows(unsigned char **state);
+  void InvShiftRows(unsigned char state[4][Nb]);
 
   void CheckLength(unsigned int len);
 
