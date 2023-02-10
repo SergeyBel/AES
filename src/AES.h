@@ -1,10 +1,11 @@
 #ifndef _AES_H_
 #define _AES_H_
 
-#include <stdio.h>
-
+#include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 enum class AESKeyLength { AES_128, AES_192, AES_256 };
