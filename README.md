@@ -47,10 +47,12 @@ This library does not provide any padding because padding is not part of AES sta
 
 # Development:
 
+## Docker
+
 1. `git clone https://github.com/SergeyBel/AES.git`
-1. `docker-compose build`
-1. `docker-compose up -d`
-1. use make commands
+2. `docker-compose build`
+3. `docker-compose up -d`
+4. use make commands
 
 There are four executables in `bin` folder:  
 * `test` - run tests  
@@ -59,6 +61,13 @@ There are four executables in `bin` folder:
 * `speedtest` - performance speed test (main code will be taken from speedtest/main.cpp)
 * `release` - version with optimization (main code will be taken from dev/main.cpp)  
 
+
+## Native
+
+AES supports either Make or CMake as build systems.
+For both, you need to install [`gtest`](https://github.com/google/googletest) before.
+
+### Make
 
 Build commands:  
 * `make build_all` - build all targets
@@ -74,3 +83,37 @@ Build commands:
 * `make speed_test` - run performance speed test
 * `make release` - run `release` version
 * `make clean` - clean `bin` directory
+
+### CMake
+
+#### Build
+```bash
+mkdir build && cd build
+cmake .. && make -j
+```
+
+#### Run tests
+1. Navigate into the `build` directory created in the [Build](#build) section
+2. Run `ctest`
+
+#### Include AES into your CMake projects
+1. Download this repository. It is recommended to create a directory `external` or similar in which external projects
+can be copied. It is further recommended to use gitmodules if you are using git as version control:
+```bash
+mkdir external
+git submodule add https://github.com/SergejBel/AES external/AES
+```
+2. Add AES to your CMake project. Within your root `CMakeLists.txt` add the following code before using AES:
+```cmake
+# your intro...
+
+include_directories(external/AES/src)
+add_subdirectory(external/AES)
+
+# your builds...
+```
+3. Link your builds against AES
+```cmake
+add_executable(your_executable your_executable.cpp)
+target_link_libraries(your_executable PRIVATE AES)
+```
