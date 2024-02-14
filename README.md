@@ -48,7 +48,6 @@ This library does not provide any padding because padding is not part of AES sta
 # Development:
 
 1. `git clone https://github.com/SergeyBel/AES.git`
-1. `docker-compose build`
 1. `docker-compose up -d`
 1. use make commands
 

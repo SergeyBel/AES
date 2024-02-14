@@ -50,10 +50,10 @@ class AES {
   void KeyExpansion(const unsigned char key[], unsigned char w[]);
 
   void EncryptBlock(const unsigned char in[], unsigned char out[],
-                    unsigned char key[]);
+                    unsigned char *roundKeys);
 
   void DecryptBlock(const unsigned char in[], unsigned char out[],
-                    unsigned char key[]);
+                    unsigned char *roundKeys);
 
   void XorBlocks(const unsigned char *a, const unsigned char *b,
                  unsigned char *c, unsigned int len);
