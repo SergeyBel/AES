@@ -35,8 +35,9 @@ ECB, CBC, CFB modes are supported.
 
 
 
-# Padding
-This library does not provide any padding because padding is not part of AES standard. Plaintext and ciphertext length in bytes must be divisible by 16. If length doesn't satisfy this condition exception will be thrown
+# Important notes
+* This library does not provide any padding. Plaintext and ciphertext length in bytes must be divisible by 16. If length doesn't satisfy this condition exception will be thrown. You can use any padding before encryption if necessary
+* This library does not provide any key derivation function. Key length must 128/192/256 bits respectively. You can use any KDF before encryption if necessary
 
 
 # Links
